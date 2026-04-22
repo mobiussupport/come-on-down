@@ -1766,9 +1766,10 @@ async function startPricingGame() {
   G.plinkoChips = 0; G.plinkoAnswers = undefined; G.plinkoTotal = 0;
   G.plinkoPhase = 'earn'; G.plinkoDrops = []; G.plinkoChipsLeft = 0;
   G.fbSelected = {front:null,back:null}; G.fbDone = false;
-  G.ppShuffled = null; // pick-a-price shuffled options
-  G.hlShuffled = null; // higher/lower shuffled item order
-  G.grandOrder = null; // grand game shuffled item order
+  G.ppShuffled = null;
+  G.hlShuffled = null;
+  G.grandOrder = null;
+  G.ftShuffled = null; // five tags shuffled order
 
   let bobLine = `It's time for <strong>${game.name}</strong>! ${game.desc}`;
   try {
@@ -1797,9 +1798,10 @@ function renderPricingGame(game) {
 
 // ── FIVE PRICE TAGS ──────────────────────────────────────────
 function renderFiveTags(game) {
-  const shuffled = shuffle(game.tags);
+  // Shuffle once and store — don't re-shuffle on every render
+  if (!G.ftShuffled) G.ftShuffled = shuffle(game.tags);
   const answered = G.gameAnswers[0] !== null;
-  const tags = shuffled.map(price => {
+  const tags = G.ftShuffled.map(price => {
     const isCorrect = answered && price === game.correct;
     const isWrong   = answered && G.gameAnswers[0] === price && price !== game.correct;
     return `<button onclick="answerFiveTags(${price})" ${answered?'disabled':''}
@@ -1830,10 +1832,17 @@ function renderFiveTags(game) {
 
 function answerFiveTags(price) {
   G.gameAnswers[0] = price;
-  if (price === G.currentGame.correct) { sfxCorrect(); G.gameCorrect++; }
-  else { sfxWrong(); G.gameTries--; }
+  const correct = price === G.currentGame.correct;
+  if (correct) { sfxCorrect(); G.gameCorrect = 1; }
+  else { sfxWrong(); G.gameCorrect = 0; }
+  G.score += correct ? 300 : 0;
+  updateStats();
   renderFiveTags(G.currentGame);
-  setTimeout(() => finishPricingGame(), 1200);
+  // Show Big Wheel button after a moment
+  setTimeout(() => {
+    const btn = $('gameActionBtn');
+    if (btn) btn.innerHTML = `<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>`;
+  }, 1200);
 }
 
 // ── MONEY GAME ───────────────────────────────────────────────
@@ -2762,10 +2771,11 @@ async function answerGame(itemIdx, answer) {
 
 async function finishPricingGame() {
   const game = G.currentGame;
-  const total = game.items.length;
+  const items = game.items || game.prizes || [];
+  const total = items.length || 1;
   const won = game.type === 'clock_game'
-    ? G.gameCorrect >= Math.ceil(total / 2)  // clock: get half or more
-    : G.gameCorrect >= 3;                     // others: 3/4
+    ? G.gameCorrect >= Math.ceil(total / 2)
+    : G.gameCorrect >= Math.ceil(total * 0.75);
 
   const pts = G.gameCorrect * 150;
   G.score += pts;
