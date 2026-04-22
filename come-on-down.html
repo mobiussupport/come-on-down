@@ -1074,7 +1074,7 @@ const PRICING_GAMES = [
     items:[
       {emoji:"🚗",name:"Compact SUV (2024)",price:26500,higher:true},
       {emoji:"🛁",name:"Spa Hot Tub (4-person)",price:3499,higher:false},
-      {emoji:"🕰️",name:"Grandfather Clock",price:2799,higher:false},
+      {emoji:"🎯",name:"Pinball Machine",price:4999,higher:false},
       {emoji:"🏎️",name:"Sports Coupe",price:31500,higher:true},
     ]
   },
@@ -1124,7 +1124,7 @@ const PRICING_GAMES = [
     desc:"Luxury and music items — do you know your stuff?",
     items:[
       {emoji:"🎹",name:"Baby Grand Piano (Yamaha)",correct:8999,options:[3999,13999,5999,8999]},
-      {emoji:"🕰️",name:"Grandfather Clock",correct:2799,options:[4499,2799,899,1799]},
+      {emoji:"🛁",name:"Spa Hot Tub (4-person)",correct:3499,options:[1499,3499,5999,899]},
       {emoji:"🛁",name:"Freestanding Soaking Tub",correct:1899,options:[2999,699,1199,1899]},
       {emoji:"🎻",name:"Professional Violin",correct:2499,options:[999,4999,2499,499]},
     ]
@@ -1165,9 +1165,9 @@ const PRICING_GAMES = [
     desc:"Luxury items with big price tags. Digit by digit!",
     items:[
       {emoji:"🎹",name:"Baby Grand Piano (Yamaha)",price:8999},
-      {emoji:"🕰️",name:"Grandfather Clock",price:2799},
-      {emoji:"⛵",name:"Sailboat (16-ft)",price:4999},
       {emoji:"🏊",name:"In-Ground Pool Kit",price:5499},
+      {emoji:"⛵",name:"Sailboat (16-ft)",price:4999},
+      {emoji:"🚐",name:"Luxury Camper Van",price:42000},
     ]
   },
 
@@ -1430,8 +1430,12 @@ let G = {
   selectedShowcase: 0,
   currentProduct: null,
   usedProducts: [],
+  usedGames: [],
+  usedBigShowcases: [],
+  usedNiceShowcases: [],
   aiLines: {},
   lastGameIdx: -1,
+  lastGameType: null,
   contestantSet: 0,
 };
 
@@ -1742,11 +1746,19 @@ async function startPricingGame() {
   loading("Setting up the pricing game...");
   sfxJingle();
 
-  // Pick a random game, avoid repeating last one
-  let idx;
-  do { idx = Math.floor(Math.random() * PRICING_GAMES.length); }
-  while (idx === G.lastGameIdx && PRICING_GAMES.length > 1);
+  // Pick a random game — avoid repeating same TYPE as last game
+  // Pool resets when all 32 exhausted, but lastType persists across resets
+  if (G.usedGames.length >= PRICING_GAMES.length) G.usedGames = [];
+  const lastType = G.lastGameType || null;
+  let pool = PRICING_GAMES.map((_,i) => i).filter(i =>
+    !G.usedGames.includes(i) && PRICING_GAMES[i].type !== lastType
+  );
+  // Absolute fallback — shouldn't happen with 12 types
+  if (pool.length === 0) pool = PRICING_GAMES.map((_,i) => i).filter(i => !G.usedGames.includes(i));
+  const idx = pool[Math.floor(Math.random() * pool.length)];
+  G.usedGames.push(idx);
   G.lastGameIdx = idx;
+  G.lastGameType = PRICING_GAMES[idx].type;
 
   const game = PRICING_GAMES[idx];
   G.currentGame = game;
@@ -3130,14 +3142,24 @@ async function startShowcase() {
   sfxShowcase();
   await sleep(500);
 
-  // Always pair one BIG showcase (has car/boat/trailer, indices 0-9)
-  // with one NICE showcase (luxury but no vehicle, indices 10-19)
-  // Randomly decide which one the player sees first (A or B)
-  const bigIdx  = Math.floor(Math.random() * 10);       // 0-9
-  const niceIdx = 10 + Math.floor(Math.random() * 10);  // 10-19
+  // Always pair one BIG showcase (indices 0-9) with one NICE showcase (indices 10-19)
+  // Track used ones so all 10 of each type are seen before repeating
+  if (G.usedBigShowcases.length >= 10)  G.usedBigShowcases  = [];
+  if (G.usedNiceShowcases.length >= 10) G.usedNiceShowcases = [];
+
+  const availableBig  = [0,1,2,3,4,5,6,7,8,9].filter(i => !G.usedBigShowcases.includes(i));
+  const availableNice = [0,1,2,3,4,5,6,7,8,9].filter(i => !G.usedNiceShowcases.includes(i));
+
+  const bigPick  = availableBig[Math.floor(Math.random()  * availableBig.length)];
+  const nicePick = availableNice[Math.floor(Math.random() * availableNice.length)];
+
+  G.usedBigShowcases.push(bigPick);
+  G.usedNiceShowcases.push(nicePick);
+
+  // Randomly assign which is A and which is B
   const swap = Math.random() < 0.5;
-  const scIdxA = swap ? niceIdx : bigIdx;
-  const scIdxB = swap ? bigIdx  : niceIdx;
+  const scIdxA = swap ? nicePick + 10 : bigPick;
+  const scIdxB = swap ? bigPick       : nicePick + 10;
   G.showcaseA = SHOWCASES[scIdxA];
   G.showcaseB = SHOWCASES[scIdxB];
   G.totalA = G.showcaseA.reduce((s,i)=>s+i.value,0);
@@ -3377,8 +3399,9 @@ function restartGame() {
     phase:'contestants_row', score:0, round:0,
     playerName: prevName,
     playerWonBid:false, playerWheelScore:0, playerShowcaseGuess:0,
-    selectedShowcase:0, currentProduct:null, usedProducts:[], aiLines:{},
-    lastGameIdx:-1, contestantSet: nextSet,
+    selectedShowcase:0, currentProduct:null, usedProducts:[], usedGames:[],
+    usedBigShowcases:[], usedNiceShowcases:[], aiLines:{},
+    lastGameIdx:-1, lastGameType:null, contestantSet: nextSet,
   };
   G.currentContestants = getContestants();
   wheelState = {rotation:0, spinning:false, spinsDone:0};
