@@ -1083,50 +1083,50 @@ const PRICING_GAMES = [
     type:"pick_price", name:"Pick-a-Price!",
     desc:"Choose the correct retail price for each item!",
     items:[
-      {emoji:"🧁",name:"KitchenAid Stand Mixer",correct:449,options:[149,299,449,649]},
-      {emoji:"🛹",name:"Electric Skateboard",correct:599,options:[199,399,599,899]},
-      {emoji:"📷",name:"Instant Camera Bundle",correct:129,options:[49,89,129,199]},
-      {emoji:"💨",name:"Smart Air Purifier",correct:249,options:[79,149,249,399]},
+      {emoji:"🧁",name:"KitchenAid Stand Mixer",correct:449,options:[149,649,449,299]},
+      {emoji:"🛹",name:"Electric Skateboard",correct:599,options:[599,199,899,399]},
+      {emoji:"📷",name:"Instant Camera Bundle",correct:129,options:[129,199,49,89]},
+      {emoji:"💨",name:"Smart Air Purifier",correct:249,options:[399,149,249,79]},
     ]
   },
   {
     type:"pick_price", name:"Pick-a-Price!",
     desc:"Four items, one price each. Can you nail them all?",
     items:[
-      {emoji:"🎒",name:"Premium Hiking Backpack",correct:189,options:[69,119,189,279]},
-      {emoji:"🏄",name:"Surfboard + Wetsuit Kit",correct:649,options:[249,449,649,999]},
-      {emoji:"🐶",name:"Luxury Pet Stroller",correct:219,options:[79,149,219,349]},
-      {emoji:"🔭",name:"Professional Telescope",correct:499,options:[149,299,499,799]},
+      {emoji:"🎒",name:"Premium Hiking Backpack",correct:189,options:[119,279,189,69]},
+      {emoji:"🏄",name:"Surfboard + Wetsuit Kit",correct:649,options:[999,449,649,249]},
+      {emoji:"🐶",name:"Luxury Pet Stroller",correct:219,options:[349,79,149,219]},
+      {emoji:"🔭",name:"Professional Telescope",correct:499,options:[149,799,299,499]},
     ]
   },
   {
     type:"pick_price", name:"Pick-a-Price!",
     desc:"Spot the real retail price, no tricks, just knowledge!",
     items:[
-      {emoji:"🎺",name:"Student Trumpet",correct:349,options:[99,199,349,599]},
-      {emoji:"🛼",name:"Roller Skates (Pair)",correct:129,options:[39,79,129,199]},
-      {emoji:"🌮",name:"Outdoor Pizza Oven",correct:399,options:[149,249,399,599]},
-      {emoji:"🧩",name:"Large LEGO Technic Set",correct:179,options:[49,99,179,299]},
+      {emoji:"🎺",name:"Student Trumpet",correct:349,options:[199,599,99,349]},
+      {emoji:"🛼",name:"Roller Skates (Pair)",correct:129,options:[79,129,199,39]},
+      {emoji:"🌮",name:"Outdoor Pizza Oven",correct:399,options:[399,249,149,599]},
+      {emoji:"🧩",name:"Large LEGO Technic Set",correct:179,options:[99,179,299,49]},
     ]
   },
   {
     type:"pick_price", name:"Pick-a-Price!",
     desc:"Classic show items. Do you know what these cost?",
     items:[
-      {emoji:"🕰️",name:"Grandfather Clock",correct:2799,options:[899,1499,2799,4299]},
-      {emoji:"🍲",name:"Baker's Rack",correct:449,options:[149,299,449,699]},
-      {emoji:"🛶",name:"14-ft Aluminum Fishing Boat",correct:1299,options:[499,899,1299,2199]},
-      {emoji:"🍖",name:"6-Burner BBQ Grill",correct:1299,options:[399,699,1299,1899]},
+      {emoji:"🕰️",name:"Grandfather Clock",correct:2799,options:[899,2799,4299,1499]},
+      {emoji:"🍲",name:"Baker's Rack",correct:449,options:[149,699,299,449]},
+      {emoji:"🛶",name:"14-ft Aluminum Fishing Boat",correct:1299,options:[499,899,2199,1299]},
+      {emoji:"🍖",name:"6-Burner BBQ Grill",correct:1299,options:[399,1299,699,1899]},
     ]
   },
   {
     type:"pick_price", name:"Pick-a-Price!",
     desc:"Luxury and music items — do you know your stuff?",
     items:[
-      {emoji:"🎹",name:"Baby Grand Piano (Yamaha)",correct:8999,options:[3999,5999,8999,13999]},
-      {emoji:"🕰️",name:"Grandfather Clock",correct:2799,options:[899,1799,2799,4499]},
-      {emoji:"🛁",name:"Freestanding Soaking Tub",correct:1899,options:[699,1199,1899,2999]},
-      {emoji:"🎻",name:"Professional Violin",correct:2499,options:[499,999,2499,4999]},
+      {emoji:"🎹",name:"Baby Grand Piano (Yamaha)",correct:8999,options:[3999,13999,5999,8999]},
+      {emoji:"🕰️",name:"Grandfather Clock",correct:2799,options:[4499,2799,899,1799]},
+      {emoji:"🛁",name:"Freestanding Soaking Tub",correct:1899,options:[2999,699,1199,1899]},
+      {emoji:"🎻",name:"Professional Violin",correct:2499,options:[999,4999,2499,499]},
     ]
   },
   // CLOCK GAME
@@ -1177,14 +1177,14 @@ const PRICING_GAMES = [
     desc:"One of these 5 tags is the real price of the car — which one?",
     car:{emoji:"🚗",name:"Compact SUV",desc:"2024 model, FWD, 32 MPG"},
     correct:26500,
-    tags:[19900,22500,26500,29900,33500]
+    tags:[29900,19900,26500,33500,22500]
   },
   {
     type:"five_tags", name:"Five Price Tags!",
     desc:"Find the true sticker price of this car from 5 tags!",
     car:{emoji:"🚙",name:"Midsize Sedan",desc:"V6, leather seats, sunroof"},
     correct:32900,
-    tags:[24900,28500,32900,37500,41900]
+    tags:[24900,41900,32900,37500,28500]
   },
   // ── MONEY GAME ───────────────────────────────────────────────
   {
@@ -1192,14 +1192,14 @@ const PRICING_GAMES = [
     desc:"Pick digit pairs to fill in the car's price — win the car!",
     car:{emoji:"🏎️",name:"Sports Coupe",desc:"Turbocharged, 6-speed manual"},
     price:31500,
-    pairs:["31","15","25","50","00","75"]
+    pairs:["31","50","0","15","25","75"]
   },
   {
     type:"money_game", name:"The Money Game!",
     desc:"Choose the right digit pairs to complete the car price!",
     car:{emoji:"🚗",name:"Full-Size SUV",desc:"V8, 3rd row, tow package"},
     price:48200,
-    pairs:["48","20","82","02","64","10"]
+    pairs:["48","20","0","82","64","10"]
   },
   // ── LUCKY SEVEN ──────────────────────────────────────────────
   {
@@ -1284,10 +1284,10 @@ const PRICING_GAMES = [
     type:"plinko", name:"Plinko!",
     desc:"Guess prices to earn chips — then drop them down the Plinko board!",
     items:[
-      {emoji:"🧴",name:"Luxury Skincare Set",correct:349,options:[199,349,499,699]},
-      {emoji:"🔊",name:"Portable Speaker",correct:129,options:[49,89,129,199]},
-      {emoji:"🕹️",name:"Wireless Controller",correct:79,options:[29,49,79,129]},
-      {emoji:"🪥",name:"Electric Toothbrush",correct:219,options:[79,149,219,349]}
+      {emoji:"🧴",name:"Luxury Skincare Set",correct:349,options:[499,349,199,699]},
+      {emoji:"🔊",name:"Portable Speaker",correct:129,options:[129,49,199,89]},
+      {emoji:"🕹️",name:"Wireless Controller",correct:79,options:[79,129,49,29]},
+      {emoji:"🪥",name:"Electric Toothbrush",correct:219,options:[219,349,79,149]}
     ],
     slots:[100,500,1000,0,10000,0,1000,500,100]
   },
@@ -1312,67 +1312,110 @@ const PRICING_GAMES = [
 
 
 const SHOWCASES = [
+  // ── BIG SHOWCASES (car, boat or trailer as anchor prize) ──
   [
+    {emoji:"🚗",name:"Luxury Sedan",desc:"Leather, heads-up display, driver assist",value:58000},
     {emoji:"🏖️",name:"Cancun All-Inclusive Resort",desc:"7-night stay for 2, roundtrip flights",value:5800},
-    {emoji:"🚗",name:"Convertible Sports Coupe",desc:"V6 roadster, premium audio, GPS",value:38500},
     {emoji:"🎸",name:"Recording Studio Day",desc:"8-hour session, professional engineer",value:2200},
   ],
   [
-    {emoji:"🏡",name:"Dream Kitchen Renovation",desc:"Full remodel, new appliances included",value:28000},
+    {emoji:"🚙",name:"Midsize Pickup Truck",desc:"V6 4x4, towing package, crew cab",value:44500},
     {emoji:"🛳️",name:"Caribbean Cruise for 2",desc:"10-night luxury balcony cabin",value:9200},
+    {emoji:"🎹",name:"Baby Grand Piano",desc:"Yamaha, ebony finish, bench included",value:8999},
+  ],
+  [
+    {emoji:"🏎️",name:"Sports Coupe",desc:"Turbocharged, 6-speed manual, premium audio",value:38500},
+    {emoji:"🌴",name:"Bali Private Villa",desc:"5 nights, private pool, butler service",value:12000},
+    {emoji:"🏋️",name:"Home Gym + Infrared Sauna",desc:"Cable machine, treadmill, 2-person sauna",value:12500},
+  ],
+  [
+    {emoji:"🚐",name:"Luxury Camper Van",desc:"Fully converted, solar, kitchen, queen bed",value:52000},
+    {emoji:"🍷",name:"Napa Valley Wine Estate Tour",desc:"3-night inn, private tastings, spa",value:6400},
+    {emoji:"🎭",name:"Broadway VIP Weekend",desc:"4 show tickets, 5-star hotel, dining credit",value:5200},
+  ],
+  [
+    {emoji:"🚤",name:"Pontoon Boat (24-ft)",desc:"Mercury engine, premium stereo, Bimini top",value:38000},
+    {emoji:"🏔️",name:"Ski Chalet Vacation",desc:"5-night Aspen lodge, lift passes, lessons",value:8400},
     {emoji:"💍",name:"Diamond Jewelry Collection",desc:"Necklace, earrings, bracelet, 18K gold",value:6400},
   ],
   [
-    {emoji:"🏔️",name:"Ski Chalet Vacation",desc:"5 nights Aspen, lift tickets for 2",value:7500},
-    {emoji:"🚐",name:"Luxury Camper Van",desc:"Sleeps 4, full kitchen, solar panels",value:44000},
-    {emoji:"🎮",name:"Ultimate Gaming Room Setup",desc:"Gaming PC, chair, monitors, peripherals",value:8500},
+    {emoji:"🛻",name:"Lifted Pickup Truck",desc:"4x4, custom wheels, off-road pkg, crew cab",value:56000},
+    {emoji:"🌊",name:"Hawaii Island Hopper",desc:"Inter-island flights, luau, snorkeling tours",value:6200},
+    {emoji:"🏡",name:"Smart Home Makeover",desc:"Full automation, lighting, security, audio",value:18000},
   ],
   [
-    {emoji:"🌴",name:"Bali Private Villa",desc:"7 nights, private pool, butler service",value:9800},
-    {emoji:"⛵",name:"22-Foot Sailboat",desc:"Full rigging, life jackets, trailer",value:31000},
-    {emoji:"🏋️",name:"Home Gym plus Infrared Sauna",desc:"Full cable system, 2-person sauna",value:12000},
-  ],
-  [
-    {emoji:"🎭",name:"Broadway VIP Package",desc:"4 shows, backstage passes, NYC hotel 3 nights",value:6200},
     {emoji:"🚙",name:"Electric SUV",desc:"300-mile range, autopilot, panoramic roof",value:52000},
-    {emoji:"🍷",name:"Napa Valley Wine Estate Tour",desc:"3-night stay, private tastings for 2",value:4800},
+    {emoji:"🏄",name:"Maldives Overwater Bungalow",desc:"7-night villa, all-inclusive, spa treatment",value:14000},
+    {emoji:"🎶",name:"Home Music Studio",desc:"Recording gear, monitors, soundproofing kit",value:8500},
   ],
   [
-    {emoji:"🏄",name:"Maldives Overwater Bungalow",desc:"6 nights, seaplane transfer, snorkel gear",value:14000},
-    {emoji:"🎹",name:"Baby Grand Piano",desc:"Yamaha C1X, matching bench, first tuning",value:19000},
-    {emoji:"🧘",name:"Sedona Spa and Wellness Retreat",desc:"7-day all-inclusive, couples massage",value:5500},
+    {emoji:"⛵",name:"22-Foot Sailboat",desc:"Fiberglass hull, fully rigged, trailer included",value:32000},
+    {emoji:"🗼",name:"Paris & Rome European Tour",desc:"10 nights, guided tours, business class",value:14000},
+    {emoji:"🍽️",name:"Gourmet Kitchen Package",desc:"Professional range, wine fridge, cookware",value:9800},
   ],
   [
-    {emoji:"🏕️",name:"National Parks Road Trip",desc:"21-day RV rental, park passes, all gear",value:8900},
-    {emoji:"🚙",name:"Midsize Pickup Truck",desc:"V6 4x4, towing package, crew cab",value:38900},
-    {emoji:"🕰️",name:"Grandfather Clock",desc:"Solid mahogany, Westminster chime, 84 inches",value:2799},
+    {emoji:"🚗",name:"Convertible Sports Coupe",desc:"V6 roadster, premium audio, GPS",value:42000},
+    {emoji:"🧘",name:"Sedona Spa & Wellness Retreat",desc:"5-night resort, treatments, yoga classes",value:7200},
+    {emoji:"🎮",name:"Ultimate Gaming Room Setup",desc:"Gaming PC, 4K display, racing chair, VR",value:6800},
   ],
   [
-    {emoji:"🗼",name:"Paris and Rome European Tour",desc:"10 days, flights, 4-star hotels for 2",value:12500},
-    {emoji:"🚤",name:"20-Foot Motorboat",desc:"150hp outboard, bimini top, trailer included",value:28000},
-    {emoji:"🌿",name:"Backyard Makeover",desc:"Deck, landscaping, built-in outdoor kitchen",value:22000},
+    {emoji:"🚤",name:"Bass Fishing Boat (18-ft)",desc:"Aluminum hull, 75hp motor, fish finder",value:28000},
+    {emoji:"🏜️",name:"Alaska Cruise + Glacier Tour",desc:"7-night cruise, helicopter tour, excursions",value:9800},
+    {emoji:"🏡",name:"Backyard Pool & Spa",desc:"In-ground pool, hot tub, decking, lighting",value:35000},
+  ],
+
+  // ── NICE SHOWCASES (luxury but no vehicle — still great prizes!) ──
+  [
+    {emoji:"🏡",name:"Dream Kitchen Renovation",desc:"Full remodel, quartz counters, new appliances",value:28000},
+    {emoji:"🛳️",name:"Mediterranean Cruise for 2",desc:"14-night balcony cabin, all meals included",value:11500},
+    {emoji:"💎",name:"Sapphire & Diamond Necklace",desc:"18K white gold, 3-carat sapphire, certified",value:7200},
   ],
   [
-    {emoji:"🌺",name:"Hawaii Island Hopper",desc:"8 nights, 3 islands, flights from mainland",value:7200},
-    {emoji:"🚗",name:"Full-Size SUV",desc:"V8, leather interior, 3rd row, tow hitch",value:48000},
-    {emoji:"🕹️",name:"Game Room Package",desc:"Pinball machine, pool table, arcade cabinet",value:9800},
+    {emoji:"🌴",name:"Fiji Private Island Retreat",desc:"5 nights overwater bungalow, all-inclusive",value:14000},
+    {emoji:"🎹",name:"Steinway Upright Piano",desc:"Handcrafted, ebony finish, bench included",value:22000},
+    {emoji:"💆",name:"Luxury Spa Collection",desc:"Year of monthly treatments, products, robe",value:6000},
   ],
   [
-    {emoji:"🏜️",name:"Alaska Cruise plus Glacier Tour",desc:"12-night cruise, excursions for 2",value:11000},
-    {emoji:"🛻",name:"Luxury Travel Trailer",desc:"28-ft, full bath, slideout, sleeps 6",value:35000},
-    {emoji:"🎸",name:"Home Music Studio",desc:"Acoustic panels, mics, interface, monitors",value:6500},
+    {emoji:"🏖️",name:"Turks & Caicos Beach Villa",desc:"7-night private villa, chef, beachfront",value:16500},
+    {emoji:"🏠",name:"Backyard Oasis Package",desc:"Pergola, outdoor kitchen, fire pit, landscaping",value:22000},
+    {emoji:"🥩",name:"Steakhouse Dining Collection",desc:"Year of monthly dinners for 2, top restaurants",value:5000},
   ],
   [
-    {emoji:"🏡",name:"Backyard Pool and Spa",desc:"In-ground pool, spa, decking, fencing",value:55000},
-    {emoji:"🚙",name:"Hybrid Crossover SUV",desc:"All-wheel drive, 42MPG, sunroof, nav",value:36500},
-    {emoji:"🍷",name:"Wine Cellar Package",desc:"Built-in cellar, 500 bottles, climate control",value:14000},
+    {emoji:"🌊",name:"Costa Rica Adventure Trip",desc:"7 nights, surfing, zip-lining, wildlife tours",value:7200},
+    {emoji:"💻",name:"Ultimate Home Office",desc:"Standing desk, dual monitors, ergonomic chair",value:8500},
+    {emoji:"🎤",name:"VIP Concert Package",desc:"Front row seats, backstage passes, meet & greet",value:3800},
   ],
   [
-    {emoji:"🏖️",name:"Florida Keys Houseboat Rental",desc:"7 nights, sleeps 8, kayaks included",value:6800},
-    {emoji:"🚤",name:"Bass Fishing Boat",desc:"16-ft, 60hp, fish finder, rod holders",value:18500},
-    {emoji:"🏕️",name:"Off-Road Camping Trailer",desc:"Rugged pop-up, 4WD rated, solar kit",value:24000},
+    {emoji:"🏔️",name:"National Parks Road Trip",desc:"21-day pass, glamping package, guided hikes",value:6800},
+    {emoji:"🎬",name:"Home Theater System",desc:"120-inch screen, 7.1 surround, 4K projector",value:9500},
+    {emoji:"🍾",name:"Champagne & Fine Wine Cellar",desc:"Custom wine cellar install, 200-bottle starter",value:14000},
   ],
-];
+  [
+    {emoji:"🌺",name:"Hawaii Island Hopper Adventure",desc:"10 nights, 3 islands, snorkeling, luau dinner",value:8200},
+    {emoji:"🛁",name:"Luxury Master Bath Renovation",desc:"Soaking tub, rainfall shower, heated floors",value:18000},
+    {emoji:"🏋️",name:"Home Gym System",desc:"Cable machine, bench, 200lb weights, mirrors",value:6500},
+  ],
+  [
+    {emoji:"🎸",name:"Nashville Music Experience",desc:"Recording session, Grand Ole Opry, 4 nights",value:5800},
+    {emoji:"🏡",name:"Smart Home Package",desc:"Full automation, solar panels, EV charger",value:24000},
+    {emoji:"🍷",name:"Wine Country Experience",desc:"Napa Valley 5-night inn, private tours, spa",value:7800},
+  ],
+  [
+    {emoji:"🌴",name:"Cancun Luxury All-Inclusive",desc:"10-night oceanfront suite, all meals & drinks",value:9500},
+    {emoji:"💍",name:"Diamond Engagement Ring",desc:"2-carat round brilliant, platinum setting",value:12000},
+    {emoji:"🎯",name:"Game Room Package",desc:"Pool table, arcade games, shuffleboard, bar",value:8500},
+  ],
+  [
+    {emoji:"🏜️",name:"Grand Canyon Helicopter & Raft",desc:"Helicopter tour, 3-day river rafting, lodge",value:7200},
+    {emoji:"🎹",name:"Digital Grand Piano",desc:"88 weighted keys, Bluetooth, premium stand",value:4800},
+    {emoji:"🌿",name:"Backyard Garden Makeover",desc:"Landscaping, raised beds, irrigation, lighting",value:12000},
+  ],
+  [
+    {emoji:"🏄",name:"Maldives Honeymoon Package",desc:"7-night overwater villa, couples spa, dining",value:16000},
+    {emoji:"📸",name:"Professional Camera System",desc:"Full-frame mirrorless, 3 lenses, gimbal, bag",value:5500},
+    {emoji:"🛋️",name:"Living Room Makeover",desc:"Sectional sofa, smart TV, entertainment center",value:9800},
+  ],
+];;
 
 const WHEEL_VALUES = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
 
@@ -3077,8 +3120,14 @@ async function startShowcase() {
   sfxShowcase();
   await sleep(500);
 
-  const scIdxA = Math.floor(Math.random() * SHOWCASES.length);
-  const scIdxB = (scIdxA + 1) % SHOWCASES.length;
+  // Always pair one BIG showcase (has car/boat/trailer, indices 0-9)
+  // with one NICE showcase (luxury but no vehicle, indices 10-19)
+  // Randomly decide which one the player sees first (A or B)
+  const bigIdx  = Math.floor(Math.random() * 10);       // 0-9
+  const niceIdx = 10 + Math.floor(Math.random() * 10);  // 10-19
+  const swap = Math.random() < 0.5;
+  const scIdxA = swap ? niceIdx : bigIdx;
+  const scIdxB = swap ? bigIdx  : niceIdx;
   G.showcaseA = SHOWCASES[scIdxA];
   G.showcaseB = SHOWCASES[scIdxB];
   G.totalA = G.showcaseA.reduce((s,i)=>s+i.value,0);
