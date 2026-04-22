@@ -1769,7 +1769,7 @@ async function startPricingGame() {
   G.gameTries = 3;
 
   // Reset all game-specific state
-  G.clockItemIdx = 0; G.clockGuess = ''; G.clockWon = false;
+  G.clockItemIdx = 0; G.clockGuess = ''; G.clockWon = false; G.clockProcessing = false;
   G.moneySlots = undefined; G.usedPairs = undefined; G.moneyDone = false;
   G.luckyCash = 7; G.luckyGuesses = []; G.luckyDone = false;
   G.goldenStep = 0; G.goldenWon = []; G.goldenDone = false;
@@ -2720,6 +2720,7 @@ function renderClockGame(game) {
 }
 
 function clockDigit(key) {
+  if (G.clockProcessing) return; // ignore taps during re-render delay
   const game = G.currentGame;
   const item = game.items[G.clockItemIdx];
   const priceStr = String(item.price);
@@ -2754,9 +2755,14 @@ function clockDigit(key) {
       if (allDone) { finishPricingGame(); return; }
       setTimeout(() => { bobSay(`✅ <strong>$${item.price.toLocaleString()}</strong> — correct! Next item!`); renderClockGame(game); }, 700);
     } else {
-      const fb2 = $('clockFeedback');
-      if (fb2) fb2.innerHTML = `<span style="color:var(--green)">✅ Keep going!</span>`;
-      renderClockGame(game);
+      // Partial correct — re-render after short delay so mobile tap doesn't get swallowed
+      G.clockProcessing = true;
+      setTimeout(() => {
+        renderClockGame(game);
+        const fb2 = $('clockFeedback');
+        if (fb2) fb2.innerHTML = `<span style="color:var(--green)">✅ Keep going — next digit!</span>`;
+        G.clockProcessing = false;
+      }, 300);
     }
   } else {
     // Wrong digit — give higher/lower hint and reset this item
