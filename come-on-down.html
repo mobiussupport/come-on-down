@@ -896,6 +896,16 @@ function sfxTick() {
 
 <!-- ===== GAME ENGINE ===== -->
 <script>
+// ── Fisher-Yates unbiased shuffle (replaces biased .sort(() => Math.random()-0.5)) ──
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 const CONTESTANTS = [
   {name:"Linda",   tag:"Homemaker",  avatar:"👩‍🦳"},
   {name:"Marcus",  tag:"Teacher",    avatar:"👨🏾‍🏫"},
@@ -915,32 +925,32 @@ const PRODUCTS = [
   // Furniture & Home
   {emoji:"🛋️",name:"Leather Sectional Sofa",desc:"7-piece modular, top-grain leather",price:2299,category:"Furniture"},
   {emoji:"🛏️",name:"Adjustable Smart Bed",desc:"King size, zero-gravity, sleep tracking",price:2199,category:"Furniture"},
-  {emoji:"🪑",name:"Baker's Rack",desc:"Wrought iron, 5-shelf, wine rack included",price:449,category:"Furniture"},
+  {emoji:"🍲",name:"Baker's Rack",desc:"Wrought iron, 5-shelf, wine rack included",price:449,category:"Furniture"},
   {emoji:"🕰️",name:"Grandfather Clock",desc:"Solid mahogany, Westminster chime, 84 inches",price:2799,category:"Furniture"},
-  {emoji:"🪞",name:"Antique-Style Armoire",desc:"Solid pine, 3 doors, cedar lining",price:1299,category:"Furniture"},
-  {emoji:"🪴",name:"Sunroom Furniture Set",desc:"4-piece wicker, cushions, side tables",price:1799,category:"Furniture"},
-  {emoji:"🛺",name:"Rocking Chair Set (2)",desc:"Solid teak, weather-resistant, hand-carved",price:899,category:"Furniture"},
+  {emoji:"🛋️",name:"Leather Recliner Sofa",desc:"Power reclining, USB ports, cup holders",price:1299,category:"Furniture"},
+  {emoji:"🏡",name:"Sunroom Furniture Set",desc:"4-piece wicker, cushions, side tables",price:1799,category:"Furniture"},
+  {emoji:"🪑",name:"Rocking Chair Set (2)",desc:"Solid teak, weather-resistant, hand-carved",price:899,category:"Furniture"},
   // Appliances
-  {emoji:"🧊",name:"French Door Refrigerator",desc:"28 cu ft, water dispenser, smart cooling",price:1899,category:"Appliances"},
+  {emoji:"❄️",name:"French Door Refrigerator",desc:"28 cu ft, water dispenser, smart cooling",price:1899,category:"Appliances"},
   {emoji:"🧺",name:"Washer & Dryer Set",desc:"Front-load, steam, wi-fi enabled",price:1849,category:"Appliances"},
   {emoji:"🍽️",name:"Built-in Dishwasher",desc:"18-place setting, whisper-quiet, stainless",price:999,category:"Appliances"},
-  {emoji:"🥶",name:"Chest Freezer (22 cu ft)",desc:"Manual defrost, garage-ready, lock and key",price:699,category:"Appliances"},
-  {emoji:"♨️",name:"Double Wall Oven",desc:"Self-clean, convection, smart preheat",price:2499,category:"Appliances"},
+  {emoji:"🧊",name:"Chest Freezer (22 cu ft)",desc:"Manual defrost, garage-ready, lock and key",price:699,category:"Appliances"},
+  {emoji:"🫕",name:"Double Wall Oven",desc:"Self-clean, convection, smart preheat",price:2499,category:"Appliances"},
   // Kitchen
   {emoji:"🍳",name:"Luxury Cookware Set",desc:"12-piece copper-core, professional grade",price:599,category:"Kitchen"},
   {emoji:"🧁",name:"KitchenAid Stand Mixer Pro",desc:"7-qt bowl-lift, 10 speeds, 5 attachments",price:549,category:"Kitchen"},
   {emoji:"☕",name:"DeLonghi Espresso Machine",desc:"Bean-to-cup, steam wand, built-in grinder",price:899,category:"Kitchen"},
-  {emoji:"🍷",name:"Wine Refrigerator",desc:"150-bottle dual-zone, stainless steel",price:899,category:"Kitchen"},
-  {emoji:"🌮",name:"Outdoor Wood-Fired Pizza Oven",desc:"Reaches 900F, cover and peel included",price:499,category:"Kitchen"},
+  {emoji:"🍾",name:"Wine Refrigerator",desc:"150-bottle dual-zone, stainless steel",price:899,category:"Kitchen"},
+  {emoji:"🍕",name:"Outdoor Wood-Fired Pizza Oven",desc:"Reaches 900F, cover and peel included",price:499,category:"Kitchen"},
   // Electronics
-  {emoji:"📸",name:"Mirrorless Camera Kit",desc:"24MP, 3 lenses, gimbal included",price:1599,category:"Electronics"},
+  {emoji:"📷",name:"Mirrorless Camera Kit",desc:"24MP, 3 lenses, gimbal included",price:1599,category:"Electronics"},
   {emoji:"💻",name:"Gaming Laptop",desc:"RTX 4070, 32GB RAM, 1TB SSD, 165Hz",price:1749,category:"Electronics"},
   {emoji:"📺",name:'75" QLED Smart TV',desc:"4K, 120Hz, HDR, built-in streaming",price:1299,category:"Electronics"},
-  {emoji:"🎧",name:"Home Theater System",desc:"7.1 surround, 1200W, Dolby Atmos",price:1499,category:"Electronics"},
+  {emoji:"🎬",name:"Home Theater System",desc:"7.1 surround, 1200W, Dolby Atmos",price:1499,category:"Electronics"},
   {emoji:"🖥️",name:'Ultrawide Curved Monitor 34"',desc:"144Hz, USB-C, height adjustable",price:699,category:"Electronics"},
   // Transportation & Outdoor
-  {emoji:"🏍️",name:"Electric Scooter",desc:"500W motor, 30-mile range, foldable",price:899,category:"Transportation"},
-  {emoji:"🚲",name:"E-Bike Cruiser",desc:"750W, pedal assist, 60-mile range",price:1299,category:"Transportation"},
+  {emoji:"🛴",name:"Electric Scooter",desc:"500W motor, 30-mile range, foldable",price:899,category:"Transportation"},
+  {emoji:"🚴",name:"E-Bike Cruiser",desc:"750W, pedal assist, 60-mile range",price:1299,category:"Transportation"},
   {emoji:"🛵",name:"Gas Moped (50cc)",desc:"49cc engine, 100mpg, storage trunk",price:1799,category:"Transportation"},
   {emoji:"🚤",name:"Inflatable Motor Boat",desc:"12-ft, 15hp outboard motor, trailer",price:3499,category:"Outdoors"},
   {emoji:"🛶",name:"Canoe + Kayak Package",desc:"17-ft canoe, 2 kayaks, paddles, rack",price:2799,category:"Outdoors"},
@@ -948,13 +958,13 @@ const PRODUCTS = [
   // Outdoor & Leisure
   {emoji:"🛁",name:"Spa Hot Tub",desc:"4-person, 20 jets, LED lighting",price:3499,category:"Outdoor"},
   {emoji:"🏊",name:"Above-Ground Pool Kit",desc:"18-ft round, filter pump, ladder, cover",price:1999,category:"Outdoor"},
-  {emoji:"🏕️",name:"Deluxe Camping Package",desc:"10-person tent, sleeping bags, cookware",price:799,category:"Outdoor"},
-  {emoji:"🌿",name:"Robot Lawn Mower",desc:"GPS-guided, auto-schedule, half-acre",price:1099,category:"Outdoor"},
-  {emoji:"🍖",name:"Stainless Steel BBQ Grill",desc:"6-burner propane, rotisserie, side burner",price:1299,category:"Outdoor"},
-  {emoji:"🔥",name:"Pellet Grill Smoker",desc:"Wi-fi controlled, 1000 sq in, hopper alarm",price:799,category:"Outdoor"},
+  {emoji:"⛺",name:"Deluxe Camping Package",desc:"10-person tent, sleeping bags, cookware",price:799,category:"Outdoor"},
+  {emoji:"🚜",name:"Robot Lawn Mower",desc:"GPS-guided, auto-schedule, half-acre",price:1099,category:"Outdoor"},
+  {emoji:"🥩",name:"Stainless Steel BBQ Grill",desc:"6-burner propane, rotisserie, side burner",price:1299,category:"Outdoor"},
+  {emoji:"🍖",name:"Pellet Grill Smoker",desc:"Wi-fi controlled, 1000 sq in, hopper alarm",price:799,category:"Outdoor"},
   // Fitness & Music
   {emoji:"🏋️",name:"Home Gym System",desc:"Cable machine, bench, 200lb weights",price:1499,category:"Fitness"},
-  {emoji:"🎯",name:"Pinball Machine",desc:"Full-size, LED display, classic themes",price:4999,category:"Entertainment"},
+  {emoji:"🕹️",name:"Pinball Machine",desc:"Full-size, LED display, classic themes",price:4999,category:"Entertainment"},
   {emoji:"🎸",name:"Premium Guitar Bundle",desc:"Acoustic-electric, amp, accessories",price:649,category:"Music"},
   {emoji:"🎹",name:"Digital Grand Piano",desc:"88 weighted keys, bluetooth, stand",price:1199,category:"Music"},
   {emoji:"🥁",name:"Full Drum Kit",desc:"5-piece acoustic, cymbals, throne, sticks",price:999,category:"Music"},
@@ -971,19 +981,19 @@ const PRODUCTS = [
   // Everyday Barker-era items — great for Contestants Row
   {emoji:"🧳",name:"Luxury Luggage Set (5-piece)",desc:"Hardshell spinner wheels, TSA locks",price:499,category:"Travel"},
   {emoji:"🌬️",name:"Dyson Air Purifier Fan",desc:"HEPA+carbon, 350° oscillation, app control",price:649,category:"Appliances"},
-  {emoji:"🫧",name:"Air Fryer XL (8-quart)",desc:"Digital display, 7 presets, dishwasher safe",price:179,category:"Kitchen"},
-  {emoji:"🧃",name:"Vitamix Blender",desc:"64-oz container, 10-speed, self-cleaning",price:449,category:"Kitchen"},
-  {emoji:"🪟",name:"Bedroom Furniture Set",desc:"Queen bed frame, dresser, 2 nightstands",price:1299,category:"Furniture"},
+  {emoji:"🍟",name:"Air Fryer XL (8-quart)",desc:"Digital display, 7 presets, dishwasher safe",price:179,category:"Kitchen"},
+  {emoji:"🥤",name:"Vitamix Blender",desc:"64-oz container, 10-speed, self-cleaning",price:449,category:"Kitchen"},
+  {emoji:"🛏️",name:"Bedroom Furniture Set",desc:"Queen bed frame, dresser, 2 nightstands",price:1299,category:"Furniture"},
   {emoji:"🎒",name:"Samsonite Travel Bundle",desc:"Carry-on, checked bag, backpack, packing cubes",price:399,category:"Travel"},
   {emoji:"🖨️",name:"Color Laser Printer",desc:"Wireless, duplex, 30ppm, cloud ready",price:349,category:"Electronics"},
-  {emoji:"📷",name:"Digital Camera Bundle",desc:"20MP mirrorless, 2 lenses, case, tripod",price:899,category:"Electronics"},
-  {emoji:"🎵",name:"Stereo Shelf System",desc:"Turntable, CD, Bluetooth, bookshelf speakers",price:599,category:"Electronics"},
-  {emoji:"🛒",name:"Outdoor Patio Set",desc:"6-piece aluminum, cushions, umbrella, table",price:1199,category:"Furniture"},
+  {emoji:"📸",name:"Digital Camera Bundle",desc:"20MP mirrorless, 2 lenses, case, tripod",price:899,category:"Electronics"},
+  {emoji:"🎶",name:"Stereo Shelf System",desc:"Turntable, CD, Bluetooth, bookshelf speakers",price:599,category:"Electronics"},
+  {emoji:"☂️",name:"Outdoor Patio Set",desc:"6-piece aluminum, cushions, umbrella, table",price:1199,category:"Furniture"},
   {emoji:"🧹",name:"Central Vacuum System",desc:"Whole-home install kit, 650 air watts",price:799,category:"Appliances"},
-  {emoji:"❄️",name:"Portable Air Conditioner",desc:"14,000 BTU, dual hose, wi-fi, remote",price:599,category:"Appliances"},
-  {emoji:"🔧",name:"Power Tool Combo Kit",desc:"20V drill, saw, sander, light, 2 batteries",price:449,category:"Tools"},
-  {emoji:"🪴",name:"Indoor Plant Collection",desc:"12 plants, pots, soil, care guide",price:299,category:"Home"},
-  {emoji:"🎨",name:"Digital Drawing Tablet",desc:"16\" display, 8192 levels, tilt support",price:799,category:"Electronics"},
+  {emoji:"💨",name:"Portable Air Conditioner",desc:"14,000 BTU, dual hose, wi-fi, remote",price:599,category:"Appliances"},
+  {emoji:"🔨",name:"Power Tool Combo Kit",desc:"20V drill, saw, sander, light, 2 batteries",price:449,category:"Tools"},
+  {emoji:"🌺",name:"Indoor Plant Collection",desc:"12 plants, pots, soil, care guide",price:299,category:"Home"},
+  {emoji:"✏️",name:"Digital Drawing Tablet",desc:"16\" display, 8192 levels, tilt support",price:799,category:"Electronics"},
 ];
 
 const PRICING_GAMES = [
@@ -992,7 +1002,7 @@ const PRICING_GAMES = [
     type:"higher_lower", name:"Higher or Lower?",
     desc:"Is each item priced HIGHER or LOWER than $500?",
     items:[
-      {emoji:"🎮",name:"Gaming Headset",price:299,higher:false},
+      {emoji:"🎧",name:"Gaming Headset",price:299,higher:false},
       {emoji:"🧳",name:"Luxury Luggage Set",price:849,higher:true},
       {emoji:"🪑",name:"Ergonomic Office Chair",price:479,higher:false},
       {emoji:"📱",name:'Tablet Pro 12"',price:799,higher:true},
@@ -1025,7 +1035,7 @@ const PRICING_GAMES = [
       {emoji:"🚁",name:"Mini Drone with Camera",price:349,higher:false},
       {emoji:"☕",name:"Espresso Machine",price:999,higher:true},
       {emoji:"🎻",name:"Student Violin Kit",price:249,higher:false},
-      {emoji:"🧖",name:"Massage Chair Recliner",price:1299,higher:true},
+      {emoji:"💆",name:"Massage Chair Recliner",price:1299,higher:true},
     ]
   },
   {
@@ -1033,9 +1043,9 @@ const PRICING_GAMES = [
     desc:"Is each item priced HIGHER or LOWER than $1,000?",
     items:[
       {emoji:"🕰️",name:"Grandfather Clock",price:2799,higher:true},
-      {emoji:"🪑",name:"Baker's Rack (wrought iron)",price:449,higher:false},
+      {emoji:"🍲",name:"Baker's Rack (wrought iron)",price:449,higher:false},
       {emoji:"🛁",name:"Freestanding Soaking Tub",price:1899,higher:true},
-      {emoji:"🌿",name:"Robot Lawn Mower",price:699,higher:false},
+      {emoji:"🚜",name:"Robot Lawn Mower",price:699,higher:false},
     ]
   },
   {
@@ -1043,8 +1053,8 @@ const PRICING_GAMES = [
     desc:"Is each item priced HIGHER or LOWER than $400?",
     items:[
       {emoji:"🥁",name:"Electronic Drum Pad Kit",price:299,higher:false},
-      {emoji:"🚤",name:"Inflatable Kayak (2-person)",price:599,higher:true},
-      {emoji:"🧲",name:"Large LEGO Technic Set",price:179,higher:false},
+      {emoji:"🛶",name:"Inflatable Kayak (2-person)",price:599,higher:true},
+      {emoji:"🧩",name:"Large LEGO Technic Set",price:179,higher:false},
       {emoji:"🌮",name:"Outdoor Pizza Oven",price:499,higher:true},
     ]
   },
@@ -1076,7 +1086,7 @@ const PRICING_GAMES = [
       {emoji:"🧁",name:"KitchenAid Stand Mixer",correct:449,options:[149,299,449,649]},
       {emoji:"🛹",name:"Electric Skateboard",correct:599,options:[199,399,599,899]},
       {emoji:"📷",name:"Instant Camera Bundle",correct:129,options:[49,89,129,199]},
-      {emoji:"🧯",name:"Smart Air Purifier",correct:249,options:[79,149,249,399]},
+      {emoji:"💨",name:"Smart Air Purifier",correct:249,options:[79,149,249,399]},
     ]
   },
   {
@@ -1084,8 +1094,8 @@ const PRICING_GAMES = [
     desc:"Four items, one price each. Can you nail them all?",
     items:[
       {emoji:"🎒",name:"Premium Hiking Backpack",correct:189,options:[69,119,189,279]},
-      {emoji:"🌊",name:"Surfboard + Wetsuit Kit",correct:649,options:[249,449,649,999]},
-      {emoji:"🐾",name:"Luxury Pet Stroller",correct:219,options:[79,149,219,349]},
+      {emoji:"🏄",name:"Surfboard + Wetsuit Kit",correct:649,options:[249,449,649,999]},
+      {emoji:"🐶",name:"Luxury Pet Stroller",correct:219,options:[79,149,219,349]},
       {emoji:"🔭",name:"Professional Telescope",correct:499,options:[149,299,499,799]},
     ]
   },
@@ -1096,7 +1106,7 @@ const PRICING_GAMES = [
       {emoji:"🎺",name:"Student Trumpet",correct:349,options:[99,199,349,599]},
       {emoji:"🛼",name:"Roller Skates (Pair)",correct:129,options:[39,79,129,199]},
       {emoji:"🌮",name:"Outdoor Pizza Oven",correct:399,options:[149,249,399,599]},
-      {emoji:"🧲",name:"Large LEGO Technic Set",correct:179,options:[49,99,179,299]},
+      {emoji:"🧩",name:"Large LEGO Technic Set",correct:179,options:[49,99,179,299]},
     ]
   },
   {
@@ -1104,7 +1114,7 @@ const PRICING_GAMES = [
     desc:"Classic show items. Do you know what these cost?",
     items:[
       {emoji:"🕰️",name:"Grandfather Clock",correct:2799,options:[899,1499,2799,4299]},
-      {emoji:"🪑",name:"Baker's Rack",correct:449,options:[149,299,449,699]},
+      {emoji:"🍲",name:"Baker's Rack",correct:449,options:[149,299,449,699]},
       {emoji:"🛶",name:"14-ft Aluminum Fishing Boat",correct:1299,options:[499,899,1299,2199]},
       {emoji:"🍖",name:"6-Burner BBQ Grill",correct:1299,options:[399,699,1299,1899]},
     ]
@@ -1126,7 +1136,7 @@ const PRICING_GAMES = [
     items:[
       {emoji:"🏊",name:"Above-Ground Pool Kit",price:1999},
       {emoji:"🎿",name:"Ski and Boot Package",price:879},
-      {emoji:"🔥",name:"Pellet Grill Smoker",price:799},
+      {emoji:"🍖",name:"Pellet Grill Smoker",price:799},
       {emoji:"🖥️",name:'Ultrawide Monitor 34"',price:699},
     ]
   },
@@ -1145,7 +1155,7 @@ const PRICING_GAMES = [
     desc:"Classic Price Is Right items. Can you nail the price?",
     items:[
       {emoji:"🕰️",name:"Grandfather Clock",price:2799},
-      {emoji:"🪑",name:"Baker's Rack",price:449},
+      {emoji:"🍲",name:"Baker's Rack",price:449},
       {emoji:"🍖",name:"6-Burner BBQ Grill",price:1299},
       {emoji:"☕",name:"Espresso Machine",price:899},
     ]
@@ -1160,7 +1170,146 @@ const PRICING_GAMES = [
       {emoji:"🏊",name:"In-Ground Pool Kit",price:5499},
     ]
   },
+
+  // ── FIVE PRICE TAGS ──────────────────────────────────────────
+  {
+    type:"five_tags", name:"Five Price Tags!",
+    desc:"One of these 5 tags is the real price of the car — which one?",
+    car:{emoji:"🚗",name:"Compact SUV",desc:"2024 model, FWD, 32 MPG"},
+    correct:26500,
+    tags:[19900,22500,26500,29900,33500]
+  },
+  {
+    type:"five_tags", name:"Five Price Tags!",
+    desc:"Find the true sticker price of this car from 5 tags!",
+    car:{emoji:"🚙",name:"Midsize Sedan",desc:"V6, leather seats, sunroof"},
+    correct:32900,
+    tags:[24900,28500,32900,37500,41900]
+  },
+  // ── MONEY GAME ───────────────────────────────────────────────
+  {
+    type:"money_game", name:"The Money Game!",
+    desc:"Pick digit pairs to fill in the car's price — win the car!",
+    car:{emoji:"🏎️",name:"Sports Coupe",desc:"Turbocharged, 6-speed manual"},
+    price:31500,
+    pairs:["31","15","25","50","00","75"]
+  },
+  {
+    type:"money_game", name:"The Money Game!",
+    desc:"Choose the right digit pairs to complete the car price!",
+    car:{emoji:"🚗",name:"Full-Size SUV",desc:"V8, 3rd row, tow package"},
+    price:48200,
+    pairs:["48","20","82","02","64","10"]
+  },
+  // ── LUCKY SEVEN ──────────────────────────────────────────────
+  {
+    type:"lucky_seven", name:"Lucky Seven!",
+    desc:"Start with $7! Guess each digit — pay $1 for every dollar off!",
+    item:{emoji:"🧺",name:"Washer & Dryer Set",desc:"Front-load, steam, wi-fi"},
+    price:1849
+  },
+  {
+    type:"lucky_seven", name:"Lucky Seven!",
+    desc:"$7 in your hand! Guess the price digit by digit — keep what's left!",
+    item:{emoji:"📺",name:'75" QLED Smart TV',desc:"4K, 120Hz, HDR streaming"},
+    price:1299
+  },
+  // ── GOLDEN ROAD ──────────────────────────────────────────────
+  {
+    type:"golden_road", name:"The Golden Road!",
+    desc:"Guess 3 prices in a row to win the grand prize at the end!",
+    prizes:[
+      {emoji:"🎧",name:"Noise-Cancel Headphones",price:379},
+      {emoji:"💻",name:"Gaming Laptop",price:1749},
+      {emoji:"🚗",name:"Compact SUV",price:26500}
+    ]
+  },
+  {
+    type:"golden_road", name:"The Golden Road!",
+    desc:"Three prizes on the Golden Road — guess them all to win!",
+    prizes:[
+      {emoji:"🥁",name:"Full Drum Kit",price:999},
+      {emoji:"🛁",name:"Spa Hot Tub",price:3499},
+      {emoji:"🚙",name:"Midsize Pickup Truck",price:38900}
+    ]
+  },
+  // ── CLIFF HANGERS ────────────────────────────────────────────
+  {
+    type:"cliff_hangers", name:"Cliff Hangers!",
+    desc:"Guess 3 prices — the yodeler climbs 1 step per dollar you're off. Don't let him fall!",
+    items:[
+      {emoji:"🧴",name:"Luxury Skincare Set",price:349},
+      {emoji:"🎮",name:"Gaming Console Bundle",price:649},
+      {emoji:"🚴",name:"E-Bike Cruiser",price:1299}
+    ]
+  },
+  {
+    type:"cliff_hangers", name:"Cliff Hangers!",
+    desc:"Keep the yodeler on the mountain — guess within 25 total dollars!",
+    items:[
+      {emoji:"☕",name:"Espresso Machine",price:899},
+      {emoji:"🔊",name:"Home Theater System",price:1499},
+      {emoji:"🛋️",name:"Leather Sectional Sofa",price:2299}
+    ]
+  },
+  // ── PUNCH-A-BUNCH ─────────────────────────────────────────────
+  {
+    type:"punch_bunch", name:"Punch-a-Bunch!",
+    desc:"Earn punches by guessing prices — punch the board for hidden cash!",
+    items:[
+      {emoji:"🎸",name:"Premium Guitar Bundle",price:649,options:[399,649,899,1199]},
+      {emoji:"🚜",name:"Robot Lawn Mower",price:1099,options:[599,799,1099,1499]}
+    ],
+    amounts:[500,1000,1500,2000,2500,3000,4000,5000,7500,10000,
+             250,750,1250,1750,2250,3500,4500,6000,8000,25000]
+  },
+  // ── GRAND GAME ───────────────────────────────────────────────
+  {
+    type:"grand_game", name:"The Grand Game!",
+    desc:"Pick items priced UNDER the target to add $1,000 each — reach $10,000!",
+    target:800,
+    items:[
+      {emoji:"🎮",name:"Wireless Game Controller",price:79,under:true},
+      {emoji:"📷",name:"Instant Camera Bundle",price:129,under:true},
+      {emoji:"🎧",name:"Noise-Cancel Headphones",price:379,under:true},
+      {emoji:"🧳",name:"Luxury Luggage Set",price:499,under:true},
+      {emoji:"🖨️",name:"Laser Printer",price:249,under:true},
+      {emoji:"☕",name:"Espresso Machine",price:899,under:false},
+      {emoji:"📱",name:'Tablet Pro 12"',price:799,under:false},
+      {emoji:"🛹",name:"Electric Skateboard",price:599,under:false}
+    ]
+  },
+  // ── PLINKO ───────────────────────────────────────────────────
+  {
+    type:"plinko", name:"Plinko!",
+    desc:"Guess prices to earn chips — then drop them down the Plinko board!",
+    items:[
+      {emoji:"🧴",name:"Luxury Skincare Set",correct:349,options:[199,349,499,699]},
+      {emoji:"🔊",name:"Portable Speaker",correct:129,options:[49,89,129,199]},
+      {emoji:"🕹️",name:"Wireless Controller",correct:79,options:[29,49,79,129]},
+      {emoji:"🪥",name:"Electric Toothbrush",correct:219,options:[79,149,219,349]}
+    ],
+    slots:[100,500,1000,0,10000,0,1000,500,100]
+  },
+  // ── CAR FRONT/BACK ─────────────────────────────────────────────
+  {
+    type:"car_frontback", name:"Front & Back!",
+    desc:"The first 2 digits or the last 3 digits — which is which? Build the car price!",
+    car:{emoji:"🚗",name:"Compact SUV",desc:"2024 FWD, 32 MPG, backup camera"},
+    price:26500,
+    front:"26", back:"500",
+    decoys:["29","500","26","750","19","500","26","300"]
+  },
+  {
+    type:"car_frontback", name:"Front & Back!",
+    desc:"Split the car price into front and back halves — get it right to win!",
+    car:{emoji:"🚙",name:"Midsize Pickup Truck",desc:"V6 4x4, crew cab, towing pkg"},
+    price:38900,
+    front:"38", back:"900",
+    decoys:["38","900","42","900","38","700","31","900"]
+  },
 ];
+
 
 const SHOWCASES = [
   [
@@ -1185,13 +1334,13 @@ const SHOWCASES = [
   ],
   [
     {emoji:"🎭",name:"Broadway VIP Package",desc:"4 shows, backstage passes, NYC hotel 3 nights",value:6200},
-    {emoji:"🏎️",name:"Electric SUV",desc:"300-mile range, autopilot, panoramic roof",value:52000},
+    {emoji:"🚙",name:"Electric SUV",desc:"300-mile range, autopilot, panoramic roof",value:52000},
     {emoji:"🍷",name:"Napa Valley Wine Estate Tour",desc:"3-night stay, private tastings for 2",value:4800},
   ],
   [
     {emoji:"🏄",name:"Maldives Overwater Bungalow",desc:"6 nights, seaplane transfer, snorkel gear",value:14000},
     {emoji:"🎹",name:"Baby Grand Piano",desc:"Yamaha C1X, matching bench, first tuning",value:19000},
-    {emoji:"🧖",name:"Sedona Spa and Wellness Retreat",desc:"7-day all-inclusive, couples massage",value:5500},
+    {emoji:"🧘",name:"Sedona Spa and Wellness Retreat",desc:"7-day all-inclusive, couples massage",value:5500},
   ],
   [
     {emoji:"🏕️",name:"National Parks Road Trip",desc:"21-day RV rental, park passes, all gear",value:8900},
@@ -1199,14 +1348,14 @@ const SHOWCASES = [
     {emoji:"🕰️",name:"Grandfather Clock",desc:"Solid mahogany, Westminster chime, 84 inches",value:2799},
   ],
   [
-    {emoji:"🎡",name:"Paris and Rome European Tour",desc:"10 days, flights, 4-star hotels for 2",value:12500},
+    {emoji:"🗼",name:"Paris and Rome European Tour",desc:"10 days, flights, 4-star hotels for 2",value:12500},
     {emoji:"🚤",name:"20-Foot Motorboat",desc:"150hp outboard, bimini top, trailer included",value:28000},
-    {emoji:"🏠",name:"Backyard Makeover",desc:"Deck, landscaping, built-in outdoor kitchen",value:22000},
+    {emoji:"🌿",name:"Backyard Makeover",desc:"Deck, landscaping, built-in outdoor kitchen",value:22000},
   ],
   [
-    {emoji:"🌊",name:"Hawaii Island Hopper",desc:"8 nights, 3 islands, flights from mainland",value:7200},
+    {emoji:"🌺",name:"Hawaii Island Hopper",desc:"8 nights, 3 islands, flights from mainland",value:7200},
     {emoji:"🚗",name:"Full-Size SUV",desc:"V8, leather interior, 3rd row, tow hitch",value:48000},
-    {emoji:"🎯",name:"Game Room Package",desc:"Pinball machine, pool table, arcade cabinet",value:9800},
+    {emoji:"🕹️",name:"Game Room Package",desc:"Pinball machine, pool table, arcade cabinet",value:9800},
   ],
   [
     {emoji:"🏜️",name:"Alaska Cruise plus Glacier Tour",desc:"12-night cruise, excursions for 2",value:11000},
@@ -1341,38 +1490,59 @@ async function startContestantsRow() {
 function generateAIBids(actualPrice) {
   const used = new Set();
 
-  // Generate a single unique bid — scans up AND down simultaneously until a free slot is found
   function uniqueBid(base) {
-    let v = Math.round(base / 50) * 50;
-    v = Math.max(100, v);
+    let v = Math.max(1, Math.round(base));
     if (!used.has(v)) { used.add(v); return v; }
-    let up = v + 50, down = Math.max(100, v - 50);
+    // Try $1 increments up and down to find nearest unique
+    let up = v + 1, down = Math.max(1, v - 1);
     while (true) {
       if (!used.has(up))  { used.add(up);  return up; }
       if (!used.has(down)) { used.add(down); return down; }
-      up += 50;
-      down = Math.max(100, down - 50);
+      up++; down = Math.max(1, down - 1);
     }
   }
 
   const bids = [];
-  // Use widely-spread base offsets so bids don't cluster
-  const offsets = [
-    Math.floor(Math.random() * 300 + 50),   // 50–350 under
-    Math.floor(Math.random() * 300 + 200),  // 200–500 under
-    Math.floor(Math.random() * 300 + 400),  // 400–700 under
-  ];
-  // Shuffle offsets so no contestant is always closest/furthest
-  offsets.sort(() => Math.random() - 0.5);
 
-  offsets.forEach(offset => {
-    const overbid = Math.random() < 0.20;
-    const base = overbid
-      ? actualPrice + Math.floor(Math.random() * 350 + 50)
-      : Math.max(100, actualPrice - offset);
+  for (let i = 0; i < 3; i++) {
+    const roll = Math.random();
+    let base;
+
+    if (roll < 0.05) {
+      // ~5% — classic $1 bid to undercut everyone
+      base = 1;
+
+    } else if (roll < 0.22) {
+      // ~17% — overbid (risky)
+      base = actualPrice + Math.floor(Math.random() * 400 + 25);
+
+    } else if (roll < 0.38 && bids.length > 0) {
+      // ~16% — bid exactly $1 over an existing bid (steal their spot)
+      const target = bids[Math.floor(Math.random() * bids.length)];
+      base = target + 1;
+
+    } else if (roll < 0.52 && bids.length > 0) {
+      // ~14% — bid $1 under an existing bid (sneak below)
+      const target = bids[Math.floor(Math.random() * bids.length)];
+      base = Math.max(1, target - 1);
+
+    } else if (roll < 0.65 && bids.length > 0) {
+      // ~13% — bid within $50-$200 of highest existing bid
+      const highBid = Math.max(...bids);
+      const diff = Math.floor(Math.random() * 151) + 50;
+      base = highBid + (Math.random() < 0.5 ? diff : -diff);
+      base = Math.max(1, base);
+
+    } else {
+      // ~35% — independent bid, random between $1 and actual price
+      const range = actualPrice - 1;
+      base = range > 0 ? 1 + Math.floor(Math.random() * range) : 1;
+    }
+
     bids.push(uniqueBid(base));
-  });
+  }
 
+  // Don't shuffle — keep bid order so reactions make sense positionally
   return bids;
 }
 
@@ -1537,13 +1707,25 @@ async function startPricingGame() {
 
   const game = PRICING_GAMES[idx];
   G.currentGame = game;
-  G.gameAnswers = new Array(game.items.length).fill(null);
+  G.gameAnswers = new Array((game.items||game.prizes||[]).length).fill(null);
   G.gameCorrect = 0;
   G.gameTries = 3;
-  // Clock game state
-  G.clockItemIdx = 0;
-  G.clockGuess = '';
-  G.clockWon = false;
+
+  // Reset all game-specific state
+  G.clockItemIdx = 0; G.clockGuess = ''; G.clockWon = false;
+  G.moneySlots = undefined; G.usedPairs = undefined; G.moneyDone = false;
+  G.luckyCash = 7; G.luckyGuesses = []; G.luckyDone = false;
+  G.goldenStep = 0; G.goldenWon = []; G.goldenDone = false;
+  G.cliffSteps = 0; G.cliffItemIdx = 0; G.cliffDone = false;
+  G.punchAmounts = undefined; G.punchChips = 0; G.punchPhase = 'earn';
+  G.punchAnswers = undefined; G.punchBest = 0; G.punchRevealed = undefined;
+  G.grandPicked = []; G.grandEarnings = 0; G.grandDone = false;
+  G.plinkoChips = 0; G.plinkoAnswers = undefined; G.plinkoTotal = 0;
+  G.plinkoPhase = 'earn'; G.plinkoDrops = []; G.plinkoChipsLeft = 0;
+  G.fbSelected = {front:null,back:null}; G.fbDone = false;
+  G.ppShuffled = null; // pick-a-price shuffled options
+  G.hlShuffled = null; // higher/lower shuffled item order
+  G.grandOrder = null; // grand game shuffled item order
 
   let bobLine = `It's time for <strong>${game.name}</strong>! ${game.desc}`;
   try {
@@ -1556,9 +1738,760 @@ async function startPricingGame() {
 }
 
 function renderPricingGame(game) {
-  if (game.type === 'higher_lower') renderHL(game);
-  else if (game.type === 'pick_price') renderPickPrice(game);
-  else if (game.type === 'clock_game') renderClockGame(game);
+  if      (game.type === 'higher_lower')  renderHL(game);
+  else if (game.type === 'pick_price')    renderPickPrice(game);
+  else if (game.type === 'clock_game')    renderClockGame(game);
+  else if (game.type === 'five_tags')     renderFiveTags(game);
+  else if (game.type === 'money_game')    renderMoneyGame(game);
+  else if (game.type === 'lucky_seven')   renderLuckySeven(game);
+  else if (game.type === 'golden_road')   renderGoldenRoad(game);
+  else if (game.type === 'cliff_hangers') renderCliffHangers(game);
+  else if (game.type === 'punch_bunch')   renderPunchBunch(game);
+  else if (game.type === 'grand_game')    renderGrandGame(game);
+  else if (game.type === 'plinko')        renderPlinko(game);
+  else if (game.type === 'car_frontback') renderCarFrontBack(game);
+}
+
+// ── FIVE PRICE TAGS ──────────────────────────────────────────
+function renderFiveTags(game) {
+  const shuffled = shuffle(game.tags);
+  const answered = G.gameAnswers[0] !== null;
+  const tags = shuffled.map(price => {
+    const isCorrect = answered && price === game.correct;
+    const isWrong   = answered && G.gameAnswers[0] === price && price !== game.correct;
+    return `<button onclick="answerFiveTags(${price})" ${answered?'disabled':''}
+      style="background:${isCorrect?'rgba(39,174,96,.3)':isWrong?'rgba(204,0,0,.3)':'#162442'};
+      border:2px solid ${isCorrect?'var(--green)':isWrong?'var(--red)':'rgba(255,215,0,.3)'};
+      border-radius:10px;padding:12px 8px;font-family:'Abril Fatface',cursive;
+      font-size:18px;color:${isCorrect?'var(--green)':isWrong?'#f88':'var(--gold)'};cursor:pointer;
+      display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s">
+      🏷️<span>$${price.toLocaleString()}</span>
+    </button>`;
+  }).join('');
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div class="game-subtitle">${game.desc}</div>
+      <div style="text-align:center;font-size:52px;margin:10px 0">${game.car.emoji}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:20px;color:var(--gold);margin-bottom:4px">${game.car.name}</div>
+      <div style="text-align:center;font-size:12px;color:rgba(255,248,231,.5);margin-bottom:16px">${game.car.desc}</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0">${tags}</div>
+      ${answered ? `<div class="result-panel ${G.gameAnswers[0]===game.correct?'result-win':'result-lose'}" style="display:block;margin-top:10px">
+        ${G.gameAnswers[0]===game.correct?'🎉 Correct! The price is $'+game.correct.toLocaleString()+'!':'❌ Wrong! The real price was $'+game.correct.toLocaleString()}
+      </div>` : ''}
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function answerFiveTags(price) {
+  G.gameAnswers[0] = price;
+  if (price === G.currentGame.correct) { sfxCorrect(); G.gameCorrect++; }
+  else { sfxWrong(); G.gameTries--; }
+  renderFiveTags(G.currentGame);
+  setTimeout(() => finishPricingGame(), 1200);
+}
+
+// ── MONEY GAME ───────────────────────────────────────────────
+function renderMoneyGame(game) {
+  const priceStr = String(game.price); // e.g. "31500"
+  const answered = G.moneySlots !== undefined;
+  const slots = G.moneySlots || ['__','__','__','__','__'];
+
+  // Build display: show price as slots separated in groups of 2 and 3
+  const slotDisplay = slots.map((s,i) => `
+    <div style="width:42px;height:52px;border-radius:8px;
+      border:2px solid ${s!='__'?'var(--green)':'rgba(255,215,0,.4)'};
+      background:${s!='__'?'rgba(39,174,96,.2)':'rgba(0,0,0,.3)'};
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Abril Fatface',cursive;font-size:22px;color:var(--gold)">
+      ${s!='__'?s:'_'}
+    </div>`).join('');
+
+  const pairBtns = game.pairs.map(p => {
+    const used = G.usedPairs && G.usedPairs.includes(p);
+    return `<button onclick="pickMoneyPair('${p}')" ${used||G.moneyDone?'disabled':''} style="
+      background:${used?'rgba(39,174,96,.2)':'#162442'};
+      border:2px solid ${used?'var(--green)':'rgba(255,215,0,.3)'};
+      border-radius:10px;padding:10px 16px;font-family:'Abril Fatface',cursive;
+      font-size:20px;color:${used?'var(--green)':'var(--gold)'};cursor:pointer">${p}</button>`;
+  }).join('');
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div class="game-subtitle">${game.desc}</div>
+      <div style="text-align:center;font-size:52px;margin:8px 0">${game.car.emoji}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:18px;color:var(--gold);margin-bottom:12px">${game.car.name}</div>
+      <div style="font-size:13px;text-align:center;color:rgba(255,248,231,.6);margin-bottom:8px">Build the price — $__ __ , __ __ __</div>
+      <div style="display:flex;gap:6px;justify-content:center;align-items:center;margin:14px 0">
+        <span style="font-family:'Abril Fatface',cursive;font-size:22px;color:var(--gold)">$</span>
+        ${slotDisplay}
+      </div>
+      <div style="font-size:12px;text-align:center;color:rgba(255,248,231,.5);margin-bottom:12px">Tap a pair to place it in the price</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0">${pairBtns}</div>
+      <div id="moneyFeedback" style="text-align:center;min-height:24px;margin-top:8px;font-weight:700"></div>
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function pickMoneyPair(pair) {
+  if (!G.usedPairs) G.usedPairs = [];
+  if (!G.moneySlots) G.moneySlots = ['__','__','__','__','__'];
+  if (G.moneyDone) return;
+  G.usedPairs.push(pair);
+  // Fill next two empty slots
+  let filled = 0;
+  for (let i=0;i<G.moneySlots.length&&filled<2;i++) {
+    if (G.moneySlots[i]==='__') { G.moneySlots[i]=pair[filled]; filled++; }
+  }
+  sfxTick();
+  const assembled = G.moneySlots.join('');
+  if (!assembled.includes('_') || G.usedPairs.length >= 3) {
+    G.moneyDone = true;
+    const built = parseInt(assembled);
+    if (built === G.currentGame.price) {
+      sfxCorrect(); G.gameCorrect = 1;
+    } else {
+      sfxWrong(); G.gameCorrect = 0;
+    }
+    renderMoneyGame(G.currentGame);
+    setTimeout(finishPricingGame, 1200);
+  } else {
+    renderMoneyGame(G.currentGame);
+  }
+}
+
+// ── LUCKY SEVEN ──────────────────────────────────────────────
+function renderLuckySeven(game) {
+  const priceStr = String(game.price);
+  const cash = G.luckyCash !== undefined ? G.luckyCash : 7;
+  const guesses = G.luckyGuesses || [];
+  const done = G.luckyDone || false;
+
+  const digitBoxes = priceStr.split('').map((d,i) => {
+    const g = guesses[i];
+    const correct = g !== undefined && String(g) === d;
+    const wrong = g !== undefined && String(g) !== d;
+    const diff = wrong ? Math.abs(parseInt(g) - parseInt(d)) : 0;
+    return `<div style="text-align:center">
+      <div style="width:44px;height:54px;border-radius:8px;
+        border:2px solid ${correct?'var(--green)':wrong?'var(--red)':'rgba(255,215,0,.4)'};
+        background:${correct?'rgba(39,174,96,.2)':wrong?'rgba(204,0,0,.2)':'rgba(0,0,0,.3)'};
+        display:flex;align-items:center;justify-content:center;
+        font-family:'Abril Fatface',cursive;font-size:26px;color:${correct?'var(--green)':wrong?'#f88':'var(--gold)'};
+        margin-bottom:4px">${g!==undefined?g:'_'}</div>
+      ${wrong?`<div style="font-size:10px;color:#f88">-$${diff}</div>`:''}
+    </div>`;
+  }).join('');
+
+  const numpad = [1,2,3,4,5,6,7,8,9,null,0,'⌫'].map(k => {
+    if(k===null) return '<div></div>';
+    return `<button onclick="luckyDigit('${k}')" ${done?'disabled':''}
+      style="background:#162442;border:1px solid rgba(255,215,0,.3);border-radius:8px;
+      padding:12px;font-family:'Abril Fatface',cursive;font-size:18px;color:var(--gold);cursor:pointer">${k}</button>`;
+  }).join('');
+
+  const cashColor = cash >= 4 ? 'var(--green)' : cash >= 2 ? 'var(--gold2)' : 'var(--red)';
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div style="text-align:center;font-size:38px;margin:6px 0">${game.item.emoji}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:18px;color:var(--gold)">${game.item.name}</div>
+      <div style="text-align:center;font-size:12px;color:rgba(255,248,231,.5);margin-bottom:10px">${game.item.desc}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:28px;color:${cashColor};margin:8px 0">
+        💵 $${cash} remaining
+      </div>
+      <div style="font-size:11px;text-align:center;color:rgba(255,248,231,.5);margin-bottom:10px">Guess each digit — pay $1 per dollar off!</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin:10px 0">${digitBoxes}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px;margin:10px auto">
+        ${numpad}
+      </div>
+      <div id="luckyFeedback" style="text-align:center;min-height:24px;margin-top:8px;font-weight:700"></div>
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function luckyDigit(key) {
+  const game = G.currentGame;
+  const priceStr = String(game.price);
+  if (!G.luckyGuesses) G.luckyGuesses = [];
+  if (!G.luckyCash) G.luckyCash = 7;
+  if (G.luckyDone) return;
+  const pos = G.luckyGuesses.length;
+  if (pos >= priceStr.length) return;
+  if (key === '⌫') { G.luckyGuesses.pop(); renderLuckySeven(game); return; }
+  const digit = parseInt(key);
+  const correct = parseInt(priceStr[pos]);
+  const diff = Math.abs(digit - correct);
+  G.luckyGuesses.push(digit);
+  G.luckyCash = Math.max(0, G.luckyCash - diff);
+  if (diff === 0) sfxCorrect(); else sfxBuzzer();
+  if (G.luckyGuesses.length >= priceStr.length || G.luckyCash <= 0) {
+    G.luckyDone = true;
+    G.gameCorrect = G.luckyCash > 0 ? 1 : 0;
+    if (G.luckyCash > 0) { sfxReveal(); G.score += G.luckyCash * 100; }
+    else sfxWrong();
+    renderLuckySeven(game);
+    const res = $('gameResult');
+    if (res) {
+      res.className = `result-panel ${G.luckyCash>0?'result-win':'result-lose'}`;
+      res.textContent = G.luckyCash>0 ? `🎉 You win $${G.luckyCash*100}! Cash prize added to score!` : '💸 Ran out of money! Better luck next time!';
+      res.style.display='block';
+    }
+    setTimeout(() => {
+      const btn=$('gameActionBtn');
+      if(btn) btn.innerHTML=`<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>`;
+    }, 800);
+    return;
+  }
+  renderLuckySeven(game);
+}
+
+// ── GOLDEN ROAD ──────────────────────────────────────────────
+function renderGoldenRoad(game) {
+  const step = G.goldenStep || 0;
+  const won = G.goldenWon || [];
+  const prizes = game.prizes;
+
+  const steps = prizes.map((p,i) => {
+    const isWon = won[i] === true;
+    const isLost = won[i] === false;
+    const isCurrent = i === step && !G.goldenDone;
+    return `<div style="text-align:center;padding:12px 8px;border-radius:12px;
+      background:${isWon?'rgba(39,174,96,.2)':isLost?'rgba(204,0,0,.2)':isCurrent?'rgba(255,215,0,.12)':'rgba(0,0,0,.2)'};
+      border:2px solid ${isWon?'var(--green)':isLost?'var(--red)':isCurrent?'var(--gold)':'rgba(255,255,255,.1)'}">
+      <div style="font-size:32px">${p.emoji}</div>
+      <div style="font-size:12px;font-weight:700;color:var(--cream);margin:4px 0">${p.name}</div>
+      <div style="font-family:'Abril Fatface',cursive;font-size:14px;color:${isWon?'var(--green)':isLost?'#f88':'var(--gold)'}">
+        ${isWon||isLost?'$'+p.price.toLocaleString():'???'}
+      </div>
+      ${isWon?'<div style="font-size:18px">✅</div>':''}
+      ${isLost?'<div style="font-size:18px">❌</div>':''}
+      ${isCurrent?'<div style="font-size:14px;color:var(--gold2)">← YOUR PICK</div>':''}
+    </div>`;
+  }).join('<div style="font-size:24px;display:flex;align-items:center;color:var(--gold)">→</div>');
+
+  const currentPrize = prizes[step];
+  const options = currentPrize ? generateRoadOptions(currentPrize.price) : [];
+  const optBtns = (!G.goldenDone && step < prizes.length) ? options.map(opt =>
+    `<button onclick="answerGoldenRoad(${opt})" style="
+      background:#162442;border:2px solid rgba(255,215,0,.3);border-radius:10px;
+      padding:12px 16px;font-family:'Abril Fatface',cursive;font-size:18px;
+      color:var(--gold);cursor:pointer;transition:all .2s">$${opt.toLocaleString()}</button>`
+  ).join('') : '';
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div class="game-subtitle">${game.desc}</div>
+      <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin:14px 0;flex-wrap:wrap">${steps}</div>
+      ${!G.goldenDone && step < prizes.length ? `
+        <div style="font-size:13px;text-align:center;color:rgba(255,248,231,.6);margin:10px 0">What is the price of the <strong>${currentPrize.name}</strong>?</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${optBtns}</div>` : ''}
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function generateRoadOptions(correct) {
+  const opts = new Set([correct]);
+  while (opts.size < 4) {
+    const v = Math.round((correct * (0.6 + Math.random() * 0.8)) / 50) * 50;
+    if (v !== correct && v > 0) opts.add(v);
+  }
+  return shuffle([...opts]);
+}
+
+function answerGoldenRoad(price) {
+  if (!G.goldenStep) G.goldenStep = 0;
+  if (!G.goldenWon) G.goldenWon = [];
+  const game = G.currentGame;
+  const correct = game.prizes[G.goldenStep].price;
+  if (price === correct) {
+    sfxCorrect(); G.goldenWon[G.goldenStep] = true; G.goldenStep++;
+    if (G.goldenStep >= game.prizes.length) {
+      G.goldenDone = true; G.gameCorrect = 1;
+      sfxReveal(); sfxApplause(); launchConfetti(100);
+      renderGoldenRoad(game);
+      setTimeout(() => {
+        const r=$('gameResult'); if(r){r.className='result-panel result-win';r.textContent='🏆 YOU WON THE GOLDEN ROAD! All prizes are yours!';r.style.display='block';}
+        setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+      },800);
+    } else { renderGoldenRoad(game); }
+  } else {
+    sfxWrong(); G.goldenWon[G.goldenStep] = false; G.goldenDone = true; G.gameCorrect = 0;
+    renderGoldenRoad(game);
+    setTimeout(() => {
+      const r=$('gameResult'); if(r){r.className='result-panel result-lose';r.textContent=`❌ The price was $${correct.toLocaleString()}. Road ends here!`;r.style.display='block';}
+      setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+    },800);
+  }
+}
+
+// ── CLIFF HANGERS ────────────────────────────────────────────
+function renderCliffHangers(game) {
+  const steps = G.cliffSteps || 0;  // how far climber has gone (max 25 = fall)
+  const itemIdx = G.cliffItemIdx || 0;
+  const done = G.cliffDone || false;
+  const pct = Math.min(steps / 25, 1);
+  // Climber position on mountain (0=bottom, 1=top/fall)
+  const climberY = 80 - pct * 75; // SVG y position
+
+  const mountain = `<svg viewBox="0 0 200 110" width="100%" style="max-width:320px;display:block;margin:0 auto">
+    <!-- Mountain -->
+    <polygon points="10,100 100,5 190,100" fill="#4a6fa5" stroke="#2a4a7a" stroke-width="2"/>
+    <!-- Snow cap -->
+    <polygon points="80,28 100,5 120,28" fill="white" opacity="0.9"/>
+    <!-- Steps markers -->
+    ${Array.from({length:6},(_,i)=>`<line x1="${55+i*15}" y1="${90-i*14}" x2="${145-i*15+i*2}" y2="${90-i*14}" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="3,3"/>`).join('')}
+    <!-- Climber -->
+    <text x="${100-pct*15}" y="${climberY}" font-size="18" text-anchor="middle">${pct >= 1 ? '💨' : '🧑'}</text>
+    <!-- Steps counter -->
+    <text x="100" y="108" font-size="9" fill="rgba(255,255,255,.7)" text-anchor="middle">${steps}/25 steps</text>
+  </svg>`;
+
+  const item = game.items[itemIdx];
+  const options = item && !done ? generateRoadOptions(item.price) : [];
+  const optBtns = (item && !done) ? options.map(opt =>
+    `<button onclick="answerCliff(${opt})" style="
+      background:#162442;border:2px solid rgba(255,215,0,.3);border-radius:10px;
+      padding:10px 14px;font-family:'Abril Fatface',cursive;font-size:17px;
+      color:var(--gold);cursor:pointer">\$${opt.toLocaleString()}</button>`
+  ).join('') : '';
+
+  const itemDots = game.items.map((_,i)=>`<div style="width:12px;height:12px;border-radius:50%;
+    background:${i<itemIdx?'var(--green)':i===itemIdx?'var(--gold)':'rgba(255,255,255,.2)'}"></div>`).join('');
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-bottom:10px">${itemDots}</div>
+      ${mountain}
+      ${item && !done ? `
+        <div style="text-align:center;font-size:30px;margin:8px 0">${item.emoji}</div>
+        <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:16px;color:var(--gold);margin-bottom:4px">${item.name}</div>
+        <div style="font-size:11px;text-align:center;color:rgba(255,248,231,.5);margin-bottom:12px">Every dollar off = 1 step up. Over 25 = he falls!</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${optBtns}</div>` : ''}
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function answerCliff(price) {
+  if (!G.cliffSteps) G.cliffSteps = 0;
+  if (!G.cliffItemIdx) G.cliffItemIdx = 0;
+  const game = G.currentGame;
+  const item = game.items[G.cliffItemIdx];
+  const diff = Math.abs(price - item.price);
+  G.cliffSteps += diff;
+  G.cliffItemIdx++;
+  if (G.cliffSteps >= 25) {
+    G.cliffDone = true; G.gameCorrect = 0; sfxWrong();
+    renderCliffHangers(game);
+    setTimeout(()=>{
+      const r=$('gameResult');if(r){r.className='result-panel result-lose';r.textContent='💨 He fell off the mountain! '+diff+' dollars off was too many steps!';r.style.display='block';}
+      setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+    },800);
+  } else if (G.cliffItemIdx >= game.items.length) {
+    G.cliffDone = true; G.gameCorrect = 1; sfxReveal(); sfxApplause(); launchConfetti(80);
+    renderCliffHangers(game);
+    setTimeout(()=>{
+      const r=$('gameResult');if(r){r.className='result-panel result-win';r.textContent=`🏔️ He made it! Only ${G.cliffSteps} steps total — you win!`;r.style.display='block';}
+      setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+    },800);
+  } else {
+    if (diff === 0) sfxCorrect(); else sfxBuzzer();
+    renderCliffHangers(game);
+  }
+}
+
+// ── PUNCH-A-BUNCH ─────────────────────────────────────────────
+function renderPunchBunch(game) {
+  if (!G.punchAmounts) {
+    G.punchAmounts = shuffle(game.amounts);
+    G.punchRevealed = new Array(game.amounts.length).fill(false);
+    G.punchChips = 0;
+    G.punchPhase = 'earn'; // earn chips first, then punch
+    G.punchAnswers = new Array(game.items.length).fill(null);
+    G.punchBest = 0;
+  }
+
+  if (G.punchPhase === 'earn') {
+    // Show items to earn chips
+    const itemsHtml = game.items.map((item,i) => {
+      const ans = G.punchAnswers[i];
+      const isCorrect = ans !== null && ans === item.correct;
+      const isWrong = ans !== null && !isCorrect;
+      const optBtns = item.options.map(opt => {
+        let cls = '';
+        if (ans !== null) { if (opt===item.correct) cls='correct-ans'; else if(opt===ans&&isWrong) cls='wrong-ans'; }
+        return `<button class="hl-btn ${cls}" onclick="punchEarn(${i},${opt})" ${ans!==null?'disabled':''}>$${opt.toLocaleString()}</button>`;
+      }).join('');
+      return `<div class="hl-item" style="flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;width:100%;margin-bottom:8px">
+          <span class="hl-emoji">${item.emoji}</span>
+          <div class="hl-info"><div class="hl-name">${item.name}</div></div>
+          ${ans!==null?`<div style="font-family:'Abril Fatface',cursive;color:${isCorrect?'var(--green)':'#f88'}">$${item.correct.toLocaleString()}</div>`:''}
+        </div>
+        <div class="hl-btns" style="flex-wrap:wrap;gap:6px;width:100%">${optBtns}</div>
+      </div>`;
+    }).join('');
+    renderMain(`
+      <div class="section-header">PRICING GAME</div>
+      <div class="game-card">
+        <div class="game-title">${game.name}</div>
+        <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:22px;color:var(--gold);margin-bottom:4px">🎟️ Chips: ${G.punchChips}</div>
+        <div style="font-size:12px;text-align:center;color:rgba(255,248,231,.5);margin-bottom:12px">Correct answer = 1 chip. Earn chips then punch the board!</div>
+        <div class="hl-items">${itemsHtml}</div>
+        ${G.punchAnswers.every(a=>a!==null)?`<button class="action-btn action-gold" onclick="startPunching()">🥊 PUNCH THE BOARD! (${G.punchChips} chips)</button>`:''}
+      </div>`);
+  } else {
+    // Punch phase — grid of holes
+    const grid = G.punchAmounts.map((amt,i) => {
+      const revealed = G.punchRevealed[i];
+      return `<button onclick="punch(${i})" ${revealed||G.punchChips<=0?'disabled':''} style="
+        background:${revealed?'rgba(255,215,0,.15)':'#162442'};
+        border:2px solid ${revealed?'var(--gold)':'rgba(255,255,255,.2)'};
+        border-radius:50%;width:52px;height:52px;
+        font-family:'Abril Fatface',cursive;font-size:${revealed?(amt>=10000?10:12)+'px':'20px'};
+        color:${revealed?'var(--gold)':'var(--cream)'};cursor:${revealed||G.punchChips<=0?'default':'pointer'}"
+      >${revealed?'$'+amt.toLocaleString():'⭕'}</button>`;
+    }).join('');
+
+    renderMain(`
+      <div class="section-header">PRICING GAME</div>
+      <div class="game-card">
+        <div class="game-title">${game.name}</div>
+        <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:20px;color:var(--gold);margin-bottom:4px">
+          🎟️ ${G.punchChips} chips left &nbsp;|&nbsp; 💰 Best: $${G.punchBest.toLocaleString()}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0;justify-items:center">${grid}</div>
+        <div class="result-panel" id="gameResult"></div>
+        <div id="gameActionBtn"></div>
+      </div>`);
+  }
+}
+
+function punchEarn(itemIdx, price) {
+  const item = G.currentGame.items[itemIdx];
+  G.punchAnswers[itemIdx] = price;
+  if (price === item.correct) { sfxCorrect(); G.punchChips++; }
+  else sfxBuzzer();
+  renderPunchBunch(G.currentGame);
+}
+
+function startPunching() {
+  G.punchPhase = 'punch';
+  renderPunchBunch(G.currentGame);
+}
+
+function punch(idx) {
+  if (G.punchChips <= 0 || G.punchRevealed[idx]) return;
+  G.punchRevealed[idx] = true;
+  G.punchChips--;
+  const amt = G.punchAmounts[idx];
+  if (amt > G.punchBest) G.punchBest = amt;
+  sfxReveal();
+  if (G.punchChips <= 0) {
+    G.gameCorrect = G.punchBest >= 1000 ? 1 : 0;
+    G.score += G.punchBest;
+    renderPunchBunch(G.currentGame);
+    const r=$('gameResult');
+    if(r){r.className=`result-panel ${G.punchBest>=1000?'result-win':'result-lose'}`;r.textContent=`🥊 Best punch: $${G.punchBest.toLocaleString()} added to your score!`;r.style.display='block';}
+    setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+    if (G.punchBest >= 5000) { sfxApplause(); launchConfetti(100); }
+  } else { renderPunchBunch(G.currentGame); }
+}
+
+// ── GRAND GAME ───────────────────────────────────────────────
+function renderGrandGame(game) {
+  if (!G.grandPicked) { G.grandPicked=[]; G.grandEarnings=0; G.grandDone=false; }
+  // Shuffle items once per game
+  if (!G.grandOrder) G.grandOrder = shuffle([...game.items.keys()]);
+  const picked = G.grandPicked;
+  const done = G.grandDone;
+  const earnings = G.grandEarnings || 0;
+
+  const itemsHtml = G.grandOrder.map(i => {
+    const item = game.items[i];
+    const isPicked = picked.includes(i);
+    const correct = item.under;
+    const showResult = done || isPicked;
+    return `<button onclick="pickGrand(${i})" ${isPicked||done?'disabled':''} style="
+      background:${showResult?(correct?'rgba(39,174,96,.25)':'rgba(204,0,0,.2)'):'#162442'};
+      border:2px solid ${showResult?(correct?'var(--green)':'var(--red)'):'rgba(255,215,0,.25)'};
+      border-radius:10px;padding:10px 8px;text-align:center;cursor:${isPicked||done?'default':'pointer'};transition:all .2s">
+      <div style="font-size:28px">${item.emoji}</div>
+      <div style="font-size:11px;font-weight:700;color:var(--cream);margin:3px 0">${item.name}</div>
+      <div style="font-family:'Abril Fatface',cursive;font-size:13px;color:${showResult?(correct?'var(--green)':'#f88'):'var(--gold)'}">
+        ${showResult?'$'+item.price.toLocaleString():'???'}
+      </div>
+      ${showResult&&correct?'<div style="font-size:11px;color:var(--green)">✅ UNDER</div>':''}
+      ${showResult&&!correct?'<div style="font-size:11px;color:#f88">❌ OVER</div>':''}
+    </button>`;
+  }).join('');
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div style="text-align:center;font-size:13px;color:rgba(255,248,231,.7);margin-bottom:4px">Pick items priced UNDER <strong style="color:var(--gold)">$${game.target.toLocaleString()}</strong> — earn $1,000 each!</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:26px;color:var(--green);margin:6px 0">💰 $${earnings.toLocaleString()}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">${itemsHtml}</div>
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function pickGrand(idx) {
+  if (!G.grandPicked) { G.grandPicked=[]; G.grandEarnings=0; }
+  const item = G.currentGame.items[idx];
+  G.grandPicked.push(idx);
+  if (item.under) {
+    sfxCorrect(); G.grandEarnings += 1000;
+    if (G.grandEarnings >= 10000) {
+      G.grandDone=true; G.gameCorrect=1; sfxDollar(); launchConfetti(120);
+      renderGrandGame(G.currentGame);
+      const r=$('gameResult');if(r){r.className='result-panel result-win';r.textContent='🏆 $10,000! You won the Grand Game!';r.style.display='block';}
+      setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+    } else renderGrandGame(G.currentGame);
+  } else {
+    sfxWrong(); G.grandDone=true; G.gameCorrect=G.grandEarnings>=3000?1:0;
+    G.score += G.grandEarnings;
+    renderGrandGame(G.currentGame);
+    const r=$('gameResult');if(r){r.className=`result-panel ${G.grandEarnings>=3000?'result-win':'result-lose'}`;r.textContent=`${G.grandEarnings>=3000?'🎉':'😔'} Over the limit! You won $${G.grandEarnings.toLocaleString()}`;r.style.display='block';}
+    setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+  }
+}
+
+// ── PLINKO ───────────────────────────────────────────────────
+function renderPlinko(game) {
+  if (!G.plinkoChips) {
+    G.plinkoChips = 0;
+    G.plinkoAnswers = new Array(game.items.length).fill(null);
+    G.plinkoTotal = 0;
+    G.plinkoPhase = 'earn';
+  }
+
+  if (G.plinkoPhase === 'earn') {
+    const itemsHtml = game.items.map((item,i) => {
+      const ans = G.plinkoAnswers[i];
+      const isCorrect = ans !== null && ans === item.correct;
+      const optBtns = item.options.map(opt => {
+        let cls = ans !== null ? (opt===item.correct?'correct-ans':(opt===ans&&ans!==item.correct?'wrong-ans':'')) : '';
+        return `<button class="hl-btn ${cls}" onclick="plinkoEarn(${i},${opt})" ${ans!==null?'disabled':''}>$${opt.toLocaleString()}</button>`;
+      }).join('');
+      return `<div class="hl-item" style="flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;width:100%;margin-bottom:6px">
+          <span class="hl-emoji">${item.emoji}</span>
+          <div class="hl-name">${item.name}</div>
+          ${ans!==null?`<span style="font-family:'Abril Fatface',cursive;color:${isCorrect?'var(--green)':'#f88'}">$${item.correct.toLocaleString()}</span>`:''}
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;width:100%">${optBtns}</div>
+      </div>`;
+    }).join('');
+
+    renderMain(`
+      <div class="section-header">PRICING GAME</div>
+      <div class="game-card">
+        <div class="game-title">${game.name}</div>
+        <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:22px;color:var(--gold);margin-bottom:4px">🎰 Chips: ${G.plinkoChips}</div>
+        <div style="font-size:12px;text-align:center;color:rgba(255,248,231,.5);margin-bottom:12px">Correct = 1 chip to drop on Plinko!</div>
+        <div class="hl-items">${itemsHtml}</div>
+        ${G.plinkoAnswers.every(a=>a!==null)?`<button class="action-btn action-gold" onclick="startPlinko()">🎰 DROP THE CHIPS! (${G.plinkoChips} chips)</button>`:''}
+      </div>`);
+  } else {
+    renderPlinkoBoard(game);
+  }
+}
+
+function plinkoEarn(itemIdx, price) {
+  const item = G.currentGame.items[itemIdx];
+  G.plinkoAnswers[itemIdx] = price;
+  if (price === item.correct) { sfxCorrect(); G.plinkoChips++; }
+  else sfxBuzzer();
+  renderPlinko(G.currentGame);
+}
+
+function startPlinko() {
+  G.plinkoPhase = 'drop';
+  G.plinkoDrops = [];
+  G.plinkoChipsLeft = G.plinkoChips;
+  renderPlinkoBoard(G.currentGame);
+}
+
+function renderPlinkoBoard(game) {
+  const slots = game.slots;
+  const slotLabels = slots.map((v,i) => {
+    const isEdge = i===0||i===slots.length-1;
+    const isCenter = i===Math.floor(slots.length/2);
+    return `<div style="flex:1;text-align:center;padding:4px 2px;border-radius:6px;
+      background:${isCenter?'rgba(255,215,0,.2)':isEdge?'rgba(255,215,0,.08)':'rgba(0,0,0,.2)'};
+      border:1px solid ${isCenter?'var(--gold)':'rgba(255,215,0,.15)'}">
+      <div style="font-family:'Abril Fatface',cursive;font-size:${v>=10000?9:11}px;color:var(--gold)">$${v.toLocaleString()}</div>
+    </div>`;
+  }).join('');
+
+  // Build peg board SVG
+  const boardW = 280, boardH = 200, rows = 8, pegR = 5;
+  let pegs='', paths='';
+  for (let r=0;r<rows;r++) {
+    const cols = r%2===0?5:4;
+    const xStart = r%2===0?20:40;
+    for (let c=0;c<cols;c++) {
+      const x = xStart + c*(boardW-40)/(cols-1||1);
+      const y = 20 + r*(boardH-40)/(rows-1);
+      pegs += `<circle cx="${x}" cy="${y}" r="${pegR}" fill="#a09060"/>`;
+    }
+  }
+
+  // Show chip trails
+  G.plinkoDrops.forEach((trail, ci) => {
+    if (trail.length > 1) {
+      const pts = trail.map(p=>`${p.x},${p.y}`).join(' ');
+      paths += `<polyline points="${pts}" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.7"/>`;
+      const last = trail[trail.length-1];
+      paths += `<circle cx="${last.x}" cy="${last.y}" r="8" fill="#FFD700" opacity="0.9"/>`;
+    }
+  });
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:18px;color:var(--gold);margin-bottom:8px">
+        🎰 Chips left: ${G.plinkoChipsLeft} &nbsp;|&nbsp; 💰 Total: $${G.plinkoTotal.toLocaleString()}
+      </div>
+      <div style="background:#0a1628;border:2px solid rgba(255,215,0,.3);border-radius:12px;padding:10px;margin:8px 0;overflow:hidden">
+        <svg viewBox="0 0 ${boardW} ${boardH}" width="100%" style="display:block">${pegs}${paths}</svg>
+        <div style="display:flex;gap:4px;margin-top:6px">${slotLabels}</div>
+      </div>
+      ${G.plinkoChipsLeft > 0 ? `<button class="action-btn action-gold" onclick="dropChip()" style="font-size:18px;padding:12px">🎰 DROP CHIP!</button>` : ''}
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function dropChip() {
+  if (G.plinkoChipsLeft <= 0) return;
+  G.plinkoChipsLeft--;
+  const game = G.currentGame;
+  const slots = game.slots;
+  const boardW = 280;
+
+  // Simulate chip path through pegs
+  let x = boardW/2 + (Math.random()-0.5)*40;
+  const trail = [{x, y:0}];
+  const rows = 8;
+  for (let r=0;r<rows;r++) {
+    x += (Math.random()-0.5)*50;
+    x = Math.max(15, Math.min(boardW-15, x));
+    trail.push({x, y:20+r*23});
+  }
+  trail.push({x, y:200});
+
+  // Determine slot
+  const slotIdx = Math.min(slots.length-1, Math.floor(x / boardW * slots.length));
+  const won = slots[slotIdx];
+  G.plinkoTotal += won;
+  G.plinkoDrops.push(trail);
+
+  if (won > 0) sfxReveal(); else sfxBuzzer();
+
+  if (G.plinkoChipsLeft <= 0) {
+    G.gameCorrect = G.plinkoTotal >= 1000 ? 1 : 0;
+    G.score += G.plinkoTotal;
+    renderPlinkoBoard(game);
+    const r=$('gameResult');
+    if(r){r.className=`result-panel ${G.plinkoTotal>=1000?'result-win':'result-lose'}`;r.textContent=`🎰 Plinko total: $${G.plinkoTotal.toLocaleString()} added to score!`;r.style.display='block';}
+    if(G.plinkoTotal>=5000){sfxApplause();launchConfetti(100);}
+    setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
+  } else { renderPlinkoBoard(game); }
+}
+
+// ── CAR FRONT / BACK ──────────────────────────────────────────
+function renderCarFrontBack(game) {
+  const sel = G.fbSelected || {front:null, back:null};
+  const done = G.fbDone || false;
+  const priceStr = String(game.price);
+  const frontLen = game.front.length;
+  const backLen = game.back.length;
+
+  // Build unique option groups from decoys + correct
+  const allFronts = shuffle([...new Set(game.decoys.filter((_,i)=>i%2===0).concat([game.front]))]);
+  const allBacks  = shuffle([...new Set(game.decoys.filter((_,i)=>i%2===1).concat([game.back]))]);
+
+  const frontBtns = allFronts.map(v => `<button onclick="fbPick('front','${v}')" ${done?'disabled':''} style="
+    background:${sel.front===v?'rgba(255,215,0,.2)':'#162442'};
+    border:2px solid ${done&&v===game.front?'var(--green)':sel.front===v?'var(--gold)':'rgba(255,215,0,.25)'};
+    border-radius:8px;padding:10px 16px;font-family:'Abril Fatface',cursive;
+    font-size:20px;color:${done&&v===game.front?'var(--green)':sel.front===v?'var(--gold)':'var(--cream)'};cursor:pointer">${v}</button>`).join('');
+
+  const backBtns = allBacks.map(v => `<button onclick="fbPick('back','${v}')" ${done?'disabled':''} style="
+    background:${sel.back===v?'rgba(255,215,0,.2)':'#162442'};
+    border:2px solid ${done&&v===game.back?'var(--green)':sel.back===v?'var(--gold)':'rgba(255,215,0,.25)'};
+    border-radius:8px;padding:10px 16px;font-family:'Abril Fatface',cursive;
+    font-size:20px;color:${done&&v===game.back?'var(--green)':sel.back===v?'var(--gold)':'var(--cream)'};cursor:pointer">${v}</button>`).join('');
+
+  const displayPrice = `$${sel.front||'??'},${sel.back||'???'}`;
+  const won = done && sel.front===game.front && sel.back===game.back;
+
+  renderMain(`
+    <div class="section-header">PRICING GAME</div>
+    <div class="game-card">
+      <div class="game-title">${game.name}</div>
+      <div style="text-align:center;font-size:56px;margin:8px 0">${game.car.emoji}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:18px;color:var(--gold)">${game.car.name}</div>
+      <div style="text-align:center;font-size:12px;color:rgba(255,248,231,.5);margin-bottom:12px">${game.car.desc}</div>
+      <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:32px;color:var(--gold);margin:10px 0;
+        background:rgba(0,0,0,.3);border-radius:10px;padding:10px;letter-spacing:2px">
+        ${displayPrice}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+        <div>
+          <div style="font-size:11px;letter-spacing:2px;color:rgba(255,248,231,.5);text-align:center;margin-bottom:8px">FRONT ($__,___)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${frontBtns}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:2px;color:rgba(255,248,231,.5);text-align:center;margin-bottom:8px">BACK ($__,___)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${backBtns}</div>
+        </div>
+      </div>
+      ${sel.front&&sel.back&&!done?`<button class="action-btn action-gold" onclick="submitFrontBack()" style="font-size:18px;padding:12px">LOCK IT IN — $${sel.front},${sel.back}!</button>`:''}
+      <div class="result-panel" id="gameResult"></div>
+      <div id="gameActionBtn"></div>
+    </div>`);
+}
+
+function fbPick(part, val) {
+  if (!G.fbSelected) G.fbSelected = {front:null,back:null};
+  G.fbSelected[part] = val;
+  sfxTick();
+  renderCarFrontBack(G.currentGame);
+}
+
+function submitFrontBack() {
+  const game = G.currentGame;
+  G.fbDone = true;
+  const correct = G.fbSelected.front===game.front && G.fbSelected.back===game.back;
+  G.gameCorrect = correct ? 1 : 0;
+  if (correct) { sfxReveal(); sfxApplause(); launchConfetti(120); }
+  else sfxWrong();
+  renderCarFrontBack(game);
+  const r=$('gameResult');
+  if(r){r.className=`result-panel ${correct?'result-win':'result-lose'}`;
+    r.textContent=correct?`🚗 Correct! The price is $${game.price.toLocaleString()} — YOU WIN THE CAR!`:`❌ Not quite! The real price was $${game.front},${game.back} = $${game.price.toLocaleString()}`;
+    r.style.display='block';}
+  setTimeout(()=>{const b=$('gameActionBtn');if(b)b.innerHTML='<button class="action-btn action-gold" onclick="startBigWheel()">🎡 SPIN THE BIG WHEEL →</button>';},600);
 }
 
 // ── HIGHER OR LOWER ──────────────────────────────────────────
@@ -1567,7 +2500,13 @@ function renderHL(game) {
   const triesHtml = [1,2,3].map((_,i)=>`<div class="try-dot ${i>=tries?'used':''}"></div>`).join('');
   const ref = game.desc.match(/\$[\d,]+/)[0].replace(/[$,]/g,'');
 
-  const itemsHtml = game.items.map((item,i) => {
+  // Shuffle item order once per game, keep stable after answering
+  if (!G.hlShuffled) {
+    G.hlShuffled = shuffle([...game.items.keys()]);
+  }
+
+  const itemsHtml = G.hlShuffled.map(i => {
+    const item = game.items[i];
     const ans = G.gameAnswers[i];
     const isCorrect = ans !== null && ((item.higher && ans==='higher')||(!item.higher && ans==='lower'));
     const isWrong = ans !== null && !isCorrect;
@@ -1605,11 +2544,17 @@ function renderPickPrice(game) {
   const tries = G.gameTries;
   const triesHtml = [1,2,3].map((_,i)=>`<div class="try-dot ${i>=tries?'used':''}"></div>`).join('');
 
+  // Shuffle options once per game start, store in G so order stays stable after answering
+  if (!G.ppShuffled) {
+    G.ppShuffled = game.items.map(item => shuffle(item.options));
+  }
+
   const itemsHtml = game.items.map((item,i) => {
     const ans = G.gameAnswers[i];
     const isCorrect = ans !== null && ans === item.correct;
     const isWrong = ans !== null && !isCorrect;
-    const optBtns = item.options.map(opt => {
+    const shuffledOpts = G.ppShuffled[i];
+    const optBtns = shuffledOpts.map(opt => {
       let cls = '';
       if (ans !== null) {
         if (opt === item.correct) cls = 'correct-ans';
@@ -1825,24 +2770,63 @@ async function startBigWheel() {
   // Reset wheel state
   wheelState = { rotation: 0, spinning: false, spinsDone: 0 };
 
-  // AI wheel scores — simulate realistic spins
-  // Each AI spins once (or twice if under current best)
-  // Use float-safe rounding, ensure all scores are unique, busts show as 'BUST'
+  // AI wheel scores — each AI spins and reacts to what others have scored
   const usedScores = new Set();
+  let bestSoFar = 0; // track the leading valid score so far
+
   G.aiWheelScores = G.currentContestants.filter(c=>!c.isPlayer).map(c => {
-    let spin1, spin2, total, busted;
+    // First spin — completely random
+    const spin1 = WHEEL_VALUES[Math.floor(Math.random() * WHEEL_VALUES.length)];
+    const score1 = spin1 / 100;
+
+    // AI spin-again strategy — reacts to current leader like a real contestant:
+    // - If score already beats the leader, weigh bust risk vs. greed
+    // - If score DOESN'T beat the leader, much more likely to spin again
+    // - High scores (>0.65) have serious bust risk so usually bank even if losing
+    let spinAgain = false;
+    if (score1 < 1.0) {
+      const bustRisk = score1 > 0.65;
+      const beatsLeader = score1 > bestSoFar;
+
+      if (bustRisk) {
+        // Dangerous territory — bank unless really desperate (losing badly)
+        const desperate = (bestSoFar - score1) > 0.30;
+        spinAgain = desperate ? Math.random() < 0.35 : Math.random() < 0.08;
+      } else if (beatsLeader) {
+        // Ahead — mostly bank, small chance of greed
+        const aggressiveness = 1 - (score1 / 0.65);
+        spinAgain = Math.random() < (aggressiveness * 0.40);
+      } else {
+        // Behind — spin again aggressively, risk the bust
+        const gap = bestSoFar - score1;
+        const urgency = Math.min(gap / 0.50, 1.0); // 0=small gap, 1=big gap
+        spinAgain = Math.random() < (0.50 + urgency * 0.45);
+      }
+    }
+
+    let total, busted;
+    if (spinAgain) {
+      const spin2 = WHEEL_VALUES[Math.floor(Math.random() * WHEEL_VALUES.length)];
+      total = Math.round(spin1 + spin2) / 100;
+      busted = total > 1.0;
+    } else {
+      total = score1;
+      busted = false;
+    }
+
+    // Uniqueness nudge — shift by smallest increment if duplicate
     let attempts = 0;
-    do {
-      spin1 = WHEEL_VALUES[Math.floor(Math.random() * WHEEL_VALUES.length)];
-      // AI has ~60% chance to spin again (strategic — they spin if under .65)
-      const spinAgain = spin1 < 65 || Math.random() < 0.15;
-      spin2 = spinAgain ? WHEEL_VALUES[Math.floor(Math.random() * WHEEL_VALUES.length)] : 0;
-      total = Math.round((spin1 + spin2) * 10) / 1000; // keep as cents-integer then divide
-      total = Math.round((spin1 + spin2)) / 100;
+    while (usedScores.has(total) && attempts < WHEEL_VALUES.length) {
+      const nudge = WHEEL_VALUES[attempts % WHEEL_VALUES.length] / 100;
+      total = Math.round((total + nudge) * 100) / 100;
       busted = total > 1.0;
       attempts++;
-    } while (usedScores.has(total) && attempts < 20);
+    }
     usedScores.add(total);
+
+    // Update leader so next contestant knows what they need to beat
+    if (!busted && total > bestSoFar) bestSoFar = total;
+
     return { name: c.name, avatar: c.avatar, tag: c.tag, score: total, busted };
   });
   G.playerWheelScore = 0;
