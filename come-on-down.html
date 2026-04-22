@@ -1762,7 +1762,9 @@ async function startPricingGame() {
 
   const game = PRICING_GAMES[idx];
   G.currentGame = game;
-  G.gameAnswers = new Array((game.items||game.prizes||[]).length).fill(null);
+  // Five Tags has no items array — ensure at least 1 slot
+  const _answerLen = (game.items||game.prizes||game.tags||[]).length || 1;
+  G.gameAnswers = new Array(_answerLen).fill(null);
   G.gameCorrect = 0;
   G.gameTries = 3;
 
@@ -1813,14 +1815,27 @@ function renderFiveTags(game) {
   // Shuffle once and store — don't re-shuffle on every render
   if (!G.ftShuffled) G.ftShuffled = shuffle(game.tags);
   const answered = G.gameAnswers[0] !== null;
+  const playerPick = G.gameAnswers[0];
+
   const tags = G.ftShuffled.map(price => {
-    const isCorrect = answered && price === game.correct;
-    const isWrong   = answered && G.gameAnswers[0] === price && price !== game.correct;
+    // Only highlight after player has answered
+    const isPlayerPick = answered && price === playerPick;
+    const isCorrect    = answered && price === game.correct;
+    const isWrongPick  = isPlayerPick && price !== game.correct;
+
+    let bg     = '#162442';
+    let border = 'rgba(255,215,0,.3)';
+    let color  = 'var(--gold)';
+
+    if (answered) {
+      if (isCorrect)   { bg='rgba(39,174,96,.3)';  border='var(--green)'; color='var(--green)'; }
+      if (isWrongPick) { bg='rgba(204,0,0,.3)';    border='var(--red)';   color='#f88'; }
+    }
+
     return `<button onclick="answerFiveTags(${price})" ${answered?'disabled':''}
-      style="background:${isCorrect?'rgba(39,174,96,.3)':isWrong?'rgba(204,0,0,.3)':'#162442'};
-      border:2px solid ${isCorrect?'var(--green)':isWrong?'var(--red)':'rgba(255,215,0,.3)'};
-      border-radius:10px;padding:12px 8px;font-family:'Abril Fatface',cursive;
-      font-size:18px;color:${isCorrect?'var(--green)':isWrong?'#f88':'var(--gold)'};cursor:pointer;
+      style="background:${bg};border:2px solid ${border};border-radius:10px;
+      padding:12px 6px;font-family:'Abril Fatface',cursive;font-size:16px;
+      color:${color};cursor:${answered?'default':'pointer'};
       display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s">
       🏷️<span>$${price.toLocaleString()}</span>
     </button>`;
@@ -1834,9 +1849,9 @@ function renderFiveTags(game) {
       <div style="text-align:center;font-size:52px;margin:10px 0">${game.car.emoji}</div>
       <div style="text-align:center;font-family:'Abril Fatface',cursive;font-size:20px;color:var(--gold);margin-bottom:4px">${game.car.name}</div>
       <div style="text-align:center;font-size:12px;color:rgba(255,248,231,.5);margin-bottom:16px">${game.car.desc}</div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0">${tags}</div>
-      ${answered ? `<div class="result-panel ${G.gameAnswers[0]===game.correct?'result-win':'result-lose'}" style="display:block;margin-top:10px">
-        ${G.gameAnswers[0]===game.correct?'🎉 Correct! The price is $'+game.correct.toLocaleString()+'!':'❌ Wrong! The real price was $'+game.correct.toLocaleString()}
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0;overflow:hidden">${tags}</div>
+      ${answered ? `<div class="result-panel ${playerPick===game.correct?'result-win':'result-lose'}" style="display:block;margin-top:10px">
+        ${playerPick===game.correct?'🎉 Correct! The price is $'+game.correct.toLocaleString()+'!':'❌ Wrong! The real price was $'+game.correct.toLocaleString()}
       </div>` : ''}
       <div id="gameActionBtn"></div>
     </div>`);
@@ -2197,7 +2212,11 @@ function renderPunchBunch(game) {
       const isWrong = ans !== null && !isCorrect;
       const optBtns = item.options.map(opt => {
         let cls = '';
-        if (ans !== null) { if (opt===item.correct) cls='correct-ans'; else if(opt===ans&&isWrong) cls='wrong-ans'; }
+        if (ans !== null) {
+            if (opt===ans && isCorrect)  cls='correct-ans';
+            else if (opt===ans && isWrong) cls='wrong-ans';
+            else if (opt===item.correct && isWrong) cls='correct-ans';
+          }
         return `<button class="hl-btn ${cls}" onclick="punchEarn(${i},${opt})" ${ans!==null?'disabled':''}>$${opt.toLocaleString()}</button>`;
       }).join('');
       return `<div class="hl-item" style="flex-wrap:wrap">
@@ -2351,7 +2370,7 @@ function renderPlinko(game) {
       const ans = G.plinkoAnswers[i];
       const isCorrect = ans !== null && ans === item.correct;
       const optBtns = item.options.map(opt => {
-        let cls = ans !== null ? (opt===item.correct?'correct-ans':(opt===ans&&ans!==item.correct?'wrong-ans':'')) : '';
+        let cls = ans !== null ? (opt===ans&&ans===item.correct?'correct-ans':(opt===ans&&ans!==item.correct?'wrong-ans':(opt===item.correct&&ans!==item.correct?'correct-ans':''))) : '';
         return `<button class="hl-btn ${cls}" onclick="plinkoEarn(${i},${opt})" ${ans!==null?'disabled':''}>$${opt.toLocaleString()}</button>`;
       }).join('');
       return `<div class="hl-item" style="flex-wrap:wrap">
@@ -2621,8 +2640,9 @@ function renderPickPrice(game) {
     const optBtns = shuffledOpts.map(opt => {
       let cls = '';
       if (ans !== null) {
-        if (opt === item.correct) cls = 'correct-ans';
-        else if (opt === ans && isWrong) cls = 'wrong-ans';
+        if (opt === ans && isCorrect)  cls = 'correct-ans'; // player picked correctly
+        else if (opt === ans && isWrong) cls = 'wrong-ans'; // player picked wrong
+        else if (opt === item.correct && isWrong) cls = 'correct-ans'; // reveal correct after wrong
       }
       return `<button class="hl-btn ${cls}" onclick="answerGame(${i},${opt})" ${ans!==null?'disabled':''}>$${opt.toLocaleString()}</button>`;
     }).join('');
