@@ -2208,22 +2208,22 @@ function renderPunchBunch(game) {
     // Show items to earn chips
     const itemsHtml = game.items.map((item,i) => {
       const ans = G.punchAnswers[i];
-      const isCorrect = ans !== null && ans === item.correct;
+      const isCorrect = ans !== null && ans === item.price;
       const isWrong = ans !== null && !isCorrect;
       const optBtns = item.options.map(opt => {
         let cls = '';
         if (ans !== null) {
-            if (opt===ans && isCorrect)  cls='correct-ans';
-            else if (opt===ans && isWrong) cls='wrong-ans';
-            else if (opt===item.correct && isWrong) cls='correct-ans';
-          }
+          if (opt===ans && isCorrect)  cls='correct-ans';
+          else if (opt===ans && isWrong) cls='wrong-ans';
+          else if (opt===item.price && isWrong) cls='correct-ans';
+        }
         return `<button class="hl-btn ${cls}" onclick="punchEarn(${i},${opt})" ${ans!==null?'disabled':''}>$${opt.toLocaleString()}</button>`;
       }).join('');
       return `<div class="hl-item" style="flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:8px;width:100%;margin-bottom:8px">
           <span class="hl-emoji">${item.emoji}</span>
           <div class="hl-info"><div class="hl-name">${item.name}</div></div>
-          ${ans!==null?`<div style="font-family:'Abril Fatface',cursive;color:${isCorrect?'var(--green)':'#f88'}">$${item.correct.toLocaleString()}</div>`:''}
+          ${ans!==null?`<div style="font-family:'Abril Fatface',cursive;color:${isCorrect?'var(--green)':'#f88'}">$${item.price.toLocaleString()}</div>`:''}
         </div>
         <div class="hl-btns" style="flex-wrap:wrap;gap:6px;width:100%">${optBtns}</div>
       </div>`;
@@ -2267,7 +2267,7 @@ function renderPunchBunch(game) {
 function punchEarn(itemIdx, price) {
   const item = G.currentGame.items[itemIdx];
   G.punchAnswers[itemIdx] = price;
-  if (price === item.correct) { sfxCorrect(); G.punchChips++; }
+  if (price === item.price) { sfxCorrect(); G.punchChips++; }
   else sfxBuzzer();
   renderPunchBunch(G.currentGame);
 }
